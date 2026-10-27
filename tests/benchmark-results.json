@@ -1,0 +1,20 @@
+{
+  "indexMs": 247,
+  "date": "2026-10-23T23:33:35.099Z",
+  "networkVersion": "lyon-v2-4615266167e59389",
+  "segments": 96191,
+  "totalKm": 844.0462068931647,
+  "fixture": {
+    "segments": 76,
+    "meters": 699.1121218543059,
+    "expectedAllDetected": true,
+    "matched": 76,
+    "durationMs": 11
+  },
+  "synthetic10000": {
+    "points": 10000,
+    "matched": 26,
+    "durationMs": 25
+  },
+  "warning": "Mesures Node sur le serveur ; ne remplacent pas une recette iPhone ni des traces GPS réelles."
+}

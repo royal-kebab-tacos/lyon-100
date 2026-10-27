@@ -1,0 +1,45 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Local downloads and temporary tooling
+.osm-cache/
+.library-tools/
+.codex/
+*.zip
+.venv-osm/
+
+upload/
+.library-tools-current/
+
+Lyon-100-comparaison-Guillotiere.png
+
+.library-save/
+data/.*
+public/data/.*
+
+# Reconstructed from bundled OSM data
+/public/data/lyon-network.json
+/data/lyon-source.json.gz
+.openai/

@@ -1,0 +1,12 @@
+{
+  "version": "lyon-v2-f1a372ba1520e6fa",
+  "source": "OpenStreetMap / BBBike Lyon — https://download.bbbike.org/osm/bbbike/Lyon/",
+  "sourceDate": "2026-10-17T16:29:55Z",
+  "sourceHash": "fd83ad16068bd92a990e8f18ec251f49e7b4f17f489397b1326a530ba16a7470",
+  "generatedAt": "2026-10-26T06:33:04.145Z",
+  "totalMeters": 1078662.6201575086,
+  "segments": 127122,
+  "license": "ODbL 1.0",
+  "attribution": "© OpenStreetMap contributors",
+  "url": "https://www.openstreetmap.org/copyright"
+}

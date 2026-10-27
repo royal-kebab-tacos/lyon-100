@@ -1,0 +1,60 @@
+[
+  {
+    "path": "public/data/lyon-network.json",
+    "gzip": true,
+    "sha256": "eb9b6aeec42b60293ec3b75e160e9bf983a28da35d416ba7e6748eb7825da270",
+    "parts": [
+      "data/bundled/network-000.bin",
+      "data/bundled/network-001.bin",
+      "data/bundled/network-002.bin",
+      "data/bundled/network-003.bin",
+      "data/bundled/network-004.bin",
+      "data/bundled/network-005.bin",
+      "data/bundled/network-006.bin",
+      "data/bundled/network-007.bin",
+      "data/bundled/network-008.bin",
+      "data/bundled/network-009.bin",
+      "data/bundled/network-010.bin",
+      "data/bundled/network-011.bin",
+      "data/bundled/network-012.bin"
+    ]
+  },
+  {
+    "path": "data/lyon-source.json.gz",
+    "gzip": false,
+    "sha256": "2305fb2b303de505e7112236c751b263146c6a93fe0d03475d8e523fe2e2d276",
+    "parts": [
+      "data/bundled/source-000.bin",
+      "data/bundled/source-001.bin",
+      "data/bundled/source-002.bin",
+      "data/bundled/source-003.bin",
+      "data/bundled/source-004.bin",
+      "data/bundled/source-005.bin",
+      "data/bundled/source-006.bin",
+      "data/bundled/source-007.bin",
+      "data/bundled/source-008.bin",
+      "data/bundled/source-009.bin",
+      "data/bundled/source-010.bin",
+      "data/bundled/source-011.bin",
+      "data/bundled/source-012.bin",
+      "data/bundled/source-013.bin",
+      "data/bundled/source-014.bin",
+      "data/bundled/source-015.bin",
+      "data/bundled/source-016.bin",
+      "data/bundled/source-017.bin",
+      "data/bundled/source-018.bin",
+      "data/bundled/source-019.bin",
+      "data/bundled/source-020.bin",
+      "data/bundled/source-021.bin",
+      "data/bundled/source-022.bin",
+      "data/bundled/source-023.bin",
+      "data/bundled/source-024.bin",
+      "data/bundled/source-025.bin",
+      "data/bundled/source-026.bin",
+      "data/bundled/source-027.bin",
+      "data/bundled/source-028.bin",
+      "data/bundled/source-029.bin",
+      "data/bundled/source-030.bin"
+    ]
+  }
+]

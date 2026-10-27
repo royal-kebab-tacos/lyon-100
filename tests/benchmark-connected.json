@@ -1,0 +1,25 @@
+{
+  "synthetic": true,
+  "description": "Parcours synthétique connecté sur le vrai réseau OSM, départ Lyon 7, sans GPS réel.",
+  "network": "lyon-v2-4615266167e59389",
+  "points": 14282,
+  "activityMeters": 20001.023183099336,
+  "expectedUniqueMeters": 17139.481254719427,
+  "matchedUniqueMeters": 17124.098851733033,
+  "missedUnits": 0,
+  "extraUnits": 0,
+  "largestMisses": [
+    {
+      "id": "945491663:c7e8b6f31c8a",
+      "name": "Boulevard des Tchécoslovaques",
+      "miss": 8.000166010924533
+    },
+    {
+      "id": "1312460279:0886531f52a5",
+      "name": "Boulevard des Tchécoslovaques",
+      "miss": 7.38223697547197
+    }
+  ],
+  "indexMs": 200,
+  "matchingMs": 156
+}
