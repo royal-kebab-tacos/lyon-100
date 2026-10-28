@@ -193,3 +193,14 @@ Recette visuelle réelle non effectuée dans cet environnement. Les deux capture
 7. Après chargement complet, ouvrir hors ligne : données de liaisons disponibles comme le réseau. Tester fluidité et zoom sur iPhone.
 
 Recette visuelle Safari/iPhone non effectuée dans cet environnement ; les tests jsdom et les calculs locaux ne la remplacent pas.
+
+
+## Version 1.8.0 — exploration locale
+
+Tests ajoutés : intersection exacte cercle/polyligne (projection locale), couverture partielle intersectée plutôt que prorata global, unions, exclusions, connecteurs ignorés, arrondissement, voies sans nom, regroupement NFC, tri selon la portion restante, suppression de couverture, polyline coudée et cercle vide. Test React du panneau : choix, rayon, localisation, effacement, recalcul et absence de mutation.
+
+Mesure locale sur le réseau complet et la sauvegarde réelle de 81 activités : construction de l’index ~89 ms ; requêtes rayons 250/500/1000/2000 m ~7/12/51/105 ms autour du point de test. Mesure du conteneur, pas de l’iPhone. Recherche déclenchée par les entrées du panneau, pas par chaque déplacement ou zoom. Données personnelles non incluses dans les tests ni le dépôt.
+
+Vérification visuelle non réalisée : Playwright disponible mais exécutable Chromium absent. Recette iPhone à faire : placer un point, annuler, déplacer/zoomer, changer rayon et arrondissement, Voir puis effacer ; vérifier cercle, absence de débordement, thème sombre et mises à jour après import/correction/suppression. L’exploration ne prouve pas qu’un départ est accessible ni qu’un trajet est praticable.
+
+Validation automatique 1.8.0 : 156 tests réussis, lint, TypeScript et build de production réussis. Avertissements Vite existants sur taille du bundle et résolution future du chargeur de configuration ; pas d’échec de compilation.

@@ -115,3 +115,14 @@ Aucun flux officiel d'import GPX vers Plans iPhone n'a été confirmé dans cett
 - Le regroupement des chaussées, l'exploration locale et le prototype de parcours restent conservés avec leurs dépendances.
 
 - [x] Cause identifiée à l'entrée du pont Gallieni : traversée OSM 1304453497 exclue comme objet technique. Préparation séparée de liaisons publiques, utilisation pour les raccordements et dessin de leur couverture, hors statistiques et objectif. Sur la sauvegarde historique, la traversée est reconnue intégralement ; cela ne certifie pas tous les trous du quai de la capture.
+
+
+## Reprise des évolutions — 1.8.0 (28 octobre)
+
+Arthur demande de passer aux autres mises à jour dans l’ordre. Les trous/trottoirs encore non résolus sont différés, pas abandonnés ni déclarés corrigés. La sauvegarde actuelle confirme 81 activités en matching 2.2.0.
+
+1. [x] Exploration locale, premier lot : point manuel, rayon, kilomètres restants dans le cercle, noms de rues et voies sans nom, dix rues les plus proches et localisation de la portion. Corrections et arrondissement pris en compte. Distance à vol d’oiseau explicitement annoncée.
+2. [ ] Recette visuelle iPhone du choix/annulation, cercle, liste et thème sombre ; performance réelle toujours à mesurer.
+3. [ ] Préparer le graphe piéton séparé, restrictions et connexions réelles ; proposer des points de départ accessibles seulement après cette vérification. Le premier lot ne garantit aucun accès à pied.
+4. [ ] Prototype de boucles avec budget de calcul et mesures de qualité/performance avant interface complète, puis export GPX et essai gratuit sur iPhone.
+5. [ ] Strava automatique, FIT/ZIP, sauvegarde cloud et autres demandes conservées.

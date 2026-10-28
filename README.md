@@ -249,3 +249,10 @@ Les anciennes sorties sont recalculées au premier lancement ; laissez ce calcul
 Cela ne garantit pas la disparition de tous les trous : une connexion absente du réseau ou une ambiguïté réelle peut rester visible. Les captures seules ne permettent pas de reconstituer les points GPS qui ont produit le résultat. L'onglet À vérifier reste facultatif.
 
 La 1.7.0 rétablit également les passages piétons publics nécessaires pour relier les rues. Ils étaient auparavant retirés des données de progression, ce qui pouvait laisser des trous même avec un GPS correct. Ils apparaissent en vert lorsqu'ils sont reconnus dans votre sortie, **sans ajouter des kilomètres à votre objectif**. Un cas identifié est la traversée d'environ 7,5 m à l'entrée du pont Gallieni.
+
+
+## Nouveauté 1.8.0 : explorer autour d’un point
+
+Dans Carte, utilisez **Autour d’un point → Choisir sur la carte**, puis touchez un lieu. Un cercle indique le rayon choisi : 250 m, 500 m, 1 km ou 2 km. Le panneau affiche les kilomètres encore à découvrir dans ce cercle, le nombre de noms de rues concernés et les dix plus proches. **Voir** zoome sur une portion locale de la rue. Les voies sans nom sont comptées séparément dans les mètres. Le filtre d’arrondissement et vos corrections s’appliquent.
+
+Les distances sont à vol d’oiseau, pas des itinéraires à pied. La liste inclut les petits restes de rues au statut « Terminée ». Le point n’est pas enregistré dans les sauvegardes et disparaît en quittant la carte. Vous pouvez le déplacer, annuler le choix ou l’effacer. Aucun réimport ou recalcul des activités n’est requis. Les boucles et l’export GPX viendront après la validation d’un réseau piéton routable.
