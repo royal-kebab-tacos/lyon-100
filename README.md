@@ -193,3 +193,13 @@ Dans **Réglages → Apparence**, choisissez Clair, Sombre ou Système. Le choix
 Dans **Progression**, consultez les jalons 25/50/75/100 % de Lyon et des neuf arrondissements, l’arrondissement le plus avancé et celui qui a le moins de kilomètres à parcourir avant 100 %. Une rue terminée à 95 % ne crédite pas les mètres manquants. Les voies sans nom comptent toujours dans les kilomètres.
 
 Après publication Netlify, acceptez la mise à jour proposée par Lyon 100. Vérifiez dans Réglages que la version indique **1.2.0**. Vos sorties n’ont pas besoin d’être réimportées.
+
+## Nouveautés 1.3.0 : votre historique
+
+Dans **Progression**, choisissez Tout Lyon ou un arrondissement. Sous les cartes de progression, **Votre progression dans le temps** affiche une courbe et un tableau. Basculez entre **Par semaine** et **Par mois** ; utilisez le bouton des périodes plus anciennes pour remonter votre historique. Les encadrés **Cette semaine** et **Ce mois-ci** indiquent les kilomètres uniques nouvellement découverts.
+
+Vos sorties déjà importées suffisent : aucun réimport n’est nécessaire. Une rue parcourue plusieurs fois compte à son premier passage dans l’ordre des dates de sortie. Une sortie sans date utilise sa date d’import, avec un message explicatif. Les semaines commencent le lundi, selon l’heure de Lyon. Les périodes sans nouvelles rues affichent zéro.
+
+Cet historique provient du calcul automatique des sorties. Les validations/retraits manuels n’y sont pas antidatés ; les voies exclues aujourd’hui sont retirées de toutes les périodes. Le total peut donc différer de la progression actuelle corrigée. Supprimer une sortie recalcule les périodes passées. Le réseau actuel sert de référence pour toutes les dates.
+
+Le calcul reste sur votre appareil et fonctionne hors ligne après chargement complet de cette version. La sauvegarde JSON existante suffit pour retrouver l’historique sur un autre appareil. Vérifiez **Application : 1.3.0** dans Réglages après publication.

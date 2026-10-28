@@ -87,3 +87,23 @@ La sauvegarde du 26 octobre a reproduit le refus au contrôle de couverture : 81
 9. Sur une copie de test, restaurer le JSON : activités/corrections conservées, préférence de thème de l’appareil inchangée.
 
 Cette liste reste à valider sur les appareils réels ; le passage des tests automatisés ne la remplace pas.
+
+## Lot 1.3.0 — historique (28 octobre 2026)
+
+- 86 tests réussis : 11 nouveaux cas de calcul/calendrier et 2 tests de composant (rendu des données, changement de zone sans nouveau Worker, suppression, erreur et reprise). Tests de composant sous jsdom avec Worker simulé, pas une recette visuelle navigateur.
+- Lint sans avertissement nouveau, TypeScript et build de production ; Worker historique inclus dans le pré-cache PWA (26 entrées).
+- Benchmark local : réseau réel de 127 122 unités, 100 activités SYNTHÉTIQUES de 2 500 unités chacune, 674 ms pour l’historique. Différence avec le total de l’union actuelle : 0 m. Ce résultat n’est pas une mesure Safari/iPhone ni une vraie sortie.
+- Aucun changement de matching, réseau, schéma de base ou format de sauvegarde. Traces GPS non transférées au Worker historique (seulement dates, IDs et couvertures).
+- Recette visuelle réelle toujours à effectuer ; l’environnement ne dispose pas de navigateur local utilisable (limite constatée sur le lot précédent).
+
+### Recette Mac puis iPhone
+
+1. Vérifier 1.3.0, activités et progression globale inchangées ; ouvrir Progression avec les sorties existantes, sans les réimporter.
+2. Vérifier courbe/tableau, bascule semaine/mois et périodes plus anciennes ; périodes sans nouveauté à zéro, cumuls non décroissants.
+3. Choisir deux arrondissements puis Tout Lyon : titres et valeurs changent, le total Lyon égale les neuf zones (avant arrondi d’affichage).
+4. Vérifier les encadrés semaine/mois, une semaine du lundi au dimanche et une période sans sortie.
+5. Sur une copie de test : importer une ancienne sortie ; vérifier sa contribution à sa date de réalisation. Réimport identique : aucun double comptage.
+6. Sur une copie : supprimer une sortie partageant des rues avec une autre ; les mètres de l’autre restent présents et les gains sont réattribués chronologiquement. Restaurer la sauvegarde pour retrouver l’historique.
+7. Exclure puis rétablir une portion sur une copie : le dénominateur et toutes les périodes se recalculent. Include/remove change le total courant, pas les gains automatiques historiques, comme expliqué dans l’écran.
+8. Contrôler les deux thèmes et une largeur iPhone ; le tableau peut défiler horizontalement à l’intérieur de son cadre. Tester hors ligne après téléchargement complet et ouverture de cette version.
+9. Changer rapidement de zone ou supprimer pendant un calcul : aucun résultat d’une ancienne liste d’activités ne doit réapparaître.
