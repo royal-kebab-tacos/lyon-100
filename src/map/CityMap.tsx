@@ -8,7 +8,7 @@ import type { Coverage, Network, Segment, TrackPoint, Interval } from '../types'
 import { TILE_URL } from '../utils/config'
 import { mergeIntervals } from '../stats/progress'
 export type MapFilter='Toutes'|'Restantes'|'Parcourues'
-interface Props {network:Network;coverage:Coverage;excluded:Set<string>;tracks:TrackPoint[][];district:number;filter:MapFilter;focusStreet:string;selectedId?:string;onSelect:(s:Segment)=>void}
+interface Props {network:Network;coverage:Coverage;excluded:Set<string>;tracks:TrackPoint[][];district:number;filter:MapFilter;focusStreet:string;focusSegmentId?:string;selectedId?:string;onSelect:(s:Segment)=>void}
 const latlng=(coords:number[][])=>coords.map(p=>[p[1],p[0]] as L.LatLngTuple)
 const part=(s:Segment,[a,b]:Interval)=>a===0&&b===1?latlng(s.coordinates):latlng(lineSliceAlong(lineString(s.coordinates),a*s.lengthMeters,b*s.lengthMeters,{units:'meters'}).geometry.coordinates)
 function NetworkLayer({network,coverage,excluded,district,filter,selectedId,onSelect}:Props){
@@ -69,7 +69,9 @@ function TraceLayer({tracks}:{tracks:TrackPoint[][]}){
 export function CityMap(props:Props){
   const [showTiles,setShowTiles]=useState(true),[tileError,setTileError]=useState(false)
   const center=useMemo<L.LatLngTuple>(()=>[45.7578,4.8351],[])
-  return <><div className="background-toggle"><button onClick={()=>setShowTiles(v=>!v)} aria-pressed={showTiles}>{showTiles?'Masquer le fond de carte':'Afficher le fond de carte'}</button>{tileError&&showTiles&&<span>Fond de carte indisponible. Les rues restent affichées.</span>}</div><MapContainer center={center} zoom={13} minZoom={10} maxZoom={19} className="city-map" preferCanvas attributionControl><BoundaryLayer network={props.network}/>{showTiles&&<TileLayer url={TILE_URL} eventHandlers={{tileerror:()=>setTileError(true)}} attribution=""/>}<OSMAttribution/><NetworkLayer {...props}/><Focus network={props.network} district={props.district} focusStreet={props.focusStreet}/><TraceLayer tracks={props.tracks}/></MapContainer></>
+  return <><div className="background-toggle"><button onClick={()=>setShowTiles(v=>!v)} aria-pressed={showTiles}>{showTiles?'Masquer le fond de carte':'Afficher le fond de carte'}</button>{tileError&&showTiles&&<span>Fond de carte indisponible. Les rues restent affichées.</span>}</div><MapContainer center={center} zoom={13} minZoom={10} maxZoom={19} className="city-map" preferCanvas attributionControl><BoundaryLayer network={props.network}/>{showTiles&&<TileLayer url={TILE_URL} eventHandlers={{tileerror:()=>setTileError(true)}} attribution=""/>}<OSMAttribution/><NetworkLayer {...props}/><Focus network={props.network} district={props.district} focusStreet={props.focusStreet}/><TraceLayer tracks={props.tracks}/><FocusSegment network={props.network} id={props.focusSegmentId}/></MapContainer></>
 }
 function BoundaryLayer({network}:{network:Network}){const map=useMap();useEffect(()=>{const layer=L.geoJSON(network.boundary,{style:{color:'#9eaf95',weight:1.5,dashArray:'5 5',fillColor:'#f2f5ec',fillOpacity:.15},interactive:false}).addTo(map);return()=>{layer.remove()}},[network,map]);return null}
 function OSMAttribution(){const map=useMap();useEffect(()=>{const text='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>';map.attributionControl.addAttribution(text);return()=>{map.attributionControl.removeAttribution(text)}},[map]);return null}
+
+function FocusSegment({network,id}:{network:Network;id?:string}){const map=useMap();useEffect(()=>{const s=network.segments.find(s=>s.id===id);if(s)map.fitBounds(L.latLngBounds(latlng(s.coordinates)),{padding:[60,60],maxZoom:18})},[map,network,id]);return null}

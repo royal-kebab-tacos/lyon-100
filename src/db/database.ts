@@ -1,3 +1,4 @@
+import type { IgnoredReview } from '../review/diagnostics'
 import Dexie, { type Table } from 'dexie'
 import type { Activity, Network, ParsedActivity, MatchResult, TrackPoint, Correction } from '../types'
 import { MATCHING_PARAMETERS, MATCHING_VERSION } from '../utils/config'
@@ -63,6 +64,6 @@ export async function setCorrection(segmentId:string,action:Correction['action']
     else await database.corrections.put({segmentId,action,networkVersion:network.version,updatedAt:new Date().toISOString()})
   })
 }
-export async function deleteActivity(id:string,database=db){await database.transaction('rw',database.activities,()=>database.activities.delete(id))}
-export async function resetData(database=db){await database.transaction('rw',database.activities,database.corrections,database.recovery,async()=>{await database.activities.clear();await database.corrections.clear();await database.recovery.clear()})}
+export async function deleteActivity(id:string,database=db){await database.transaction('rw',database.activities,database.settings,async()=>{await database.activities.delete(id);const ignored=(await database.settings.get('reviewIgnored'))?.value as IgnoredReview[]|undefined;await database.settings.put({key:'reviewIgnored',value:(ignored||[]).filter(r=>r.activityId!==id)})})}
+export async function resetData(database=db){await database.transaction('rw',database.activities,database.corrections,database.recovery,database.settings,async()=>{await database.settings.delete('reviewIgnored');await database.activities.clear();await database.corrections.clear();await database.recovery.clear()})}
 export function storageError():string{return 'Impossible d’enregistrer les données sur cet appareil. Vérifiez l’espace disponible et les autorisations du navigateur, puis réessayez. Vos sorties précédentes sont conservées.'}

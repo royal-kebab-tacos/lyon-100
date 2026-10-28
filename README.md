@@ -203,3 +203,17 @@ Vos sorties déjà importées suffisent : aucun réimport n’est nécessaire. U
 Cet historique provient du calcul automatique des sorties. Les validations/retraits manuels n’y sont pas antidatés ; les voies exclues aujourd’hui sont retirées de toutes les périodes. Le total peut donc différer de la progression actuelle corrigée. Supprimer une sortie recalcule les périodes passées. Le réseau actuel sert de référence pour toutes les dates.
 
 Le calcul reste sur votre appareil et fonctionne hors ligne après chargement complet de cette version. La sauvegarde JSON existante suffit pour retrouver l’historique sur un autre appareil. Vérifiez **Application : 1.3.0** dans Réglages après publication.
+
+## Nouveautés 1.4.0 : vérifier une sortie
+
+Dans **Activités**, touchez **Vérifier le GPS** sur une sortie. Le panneau **À vérifier** analyse uniquement cette sortie ; aucun réimport n’est nécessaire et la progression ne change pas pendant l’analyse.
+
+Pour une suggestion, choisissez **Comparer sur la carte** : la portion concernée est bleue, votre trace GPS orange. Vous pouvez corriger depuis la fiche sur la carte, ou revenir dans Activités :
+
+- **Je l’ai parcourue** / **Je ne l’ai pas parcourue** : correction de la portion entière, pour toutes vos sorties, après confirmation.
+- **Ignorer** : masque cette suggestion sans changer vos kilomètres ; **Réafficher les portions ignorées** permet de revenir dessus.
+- Pour annuler une correction : touchez la portion sur la carte, puis **Revenir au calcul automatique**.
+
+La première version repère des voies parallèles plausibles et des décalages soutenus juste au-delà des 15 m de tolérance. Ce sont des indices, pas des erreurs certaines. Une liste vide ne garantit pas l’exactitude complète d’une sortie. Maximum 500 suggestions par sortie, avec affichage progressif par 20.
+
+Les choix ignorés sont conservés sur cet appareil et inclus dans les nouvelles sauvegardes JSON. Pour les transférer, utilisez Lyon 100 1.4.0 ou une version ultérieure sur l’autre appareil. Vos anciennes sauvegardes restent utilisables ; elles ne contiennent simplement pas ces choix. Les diagnostics ne quittent pas votre appareil et restent utilisables hors ligne après téléchargement complet de la version.

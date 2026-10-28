@@ -107,3 +107,27 @@ Cette liste reste à valider sur les appareils réels ; le passage des tests aut
 7. Exclure puis rétablir une portion sur une copie : le dénominateur et toutes les périodes se recalculent. Include/remove change le total courant, pas les gains automatiques historiques, comme expliqué dans l’écran.
 8. Contrôler les deux thèmes et une largeur iPhone ; le tableau peut défiler horizontalement à l’intérieur de son cadre. Tester hors ligne après téléchargement complet et ouverture de cette version.
 9. Changer rapidement de zone ou supprimer pendant un calcul : aucun résultat d’une ancienne liste d’activités ne doit réapparaître.
+
+## Lot 1.4.0 — vérification GPS facultative (28 octobre 2026)
+
+- 103 tests réussis ; lint, TypeScript et build de production réussis.
+- Diagnostics : décalage soutenu 15–22 m, voies parallèles concurrentes, exclusion des axes secondaires quand un axe est clairement plus proche, croisements, voies collinéaires, points isolés, pistes séparées, grands sauts. Le résultat du matching demeure identique avant/après diagnostic.
+- Stockage : ignorer sans modifier les activités ni les corrections ; déduplication des choix simultanés ; réaffichage ; suppression/réinitialisation ; sauvegarde et restauration des choix/corrections ; compatibilité sans le champ optionnel ; refus des entrées falsifiées ; rollback en cas d’échec.
+- Composant sous jsdom avec Worker simulé : affichage du motif, actions transmises uniquement au clic, masquage des portions déjà corrigées. Ceci ne remplace pas une recette visuelle sur navigateur réel.
+- Benchmark local final : réseau réel de 127 122 unités, 2 500 pistes SYNTHÉTIQUES indépendantes reprenant les géométries OSM (20,12 km au total), 284 ms, 40 suggestions. Ce cas mesure le coût local sur ces données, pas la qualité d’une vraie course ni les performances iPhone.
+- Le Worker de diagnostic est inclus dans le pré-cache de production (27 entrées). La tolérance du matching reste à 15 m ; les 22 m concernent seulement le diagnostic. Aucun recalcul imposé au démarrage, aucune nouvelle dépendance, aucun changement de schéma IndexedDB.
+
+### Recette Mac puis iPhone
+
+1. Exporter une sauvegarde, attendre la publication, ouvrir Réglages : version 1.4.0. Vérifier mêmes sorties, kilomètres et progression.
+2. Activités → Vérifier le GPS sur une ancienne sortie : le panneau apparaît et l’analyse laisse la progression inchangée. L’absence de suggestions reste possible.
+3. Comparer sur la carte : zoom sur la petite portion bleue, trace orange de la bonne sortie, toutes les portions affichées. Contrôler une voie parallèle et un décalage GPS connu.
+4. Sur une copie de test : « Je l’ai parcourue » puis annuler la confirmation : aucun changement. Confirmer : correction globale sur la portion entière. Depuis la carte, revenir au calcul automatique pour retrouver l’état précédent.
+5. Même contrôle pour « Je ne l’ai pas parcourue ». La portion corrigée disparaît des suggestions.
+6. Ignorer une suggestion : mètres inchangés, choix conservé après fermeture/réouverture. Réafficher les ignorés : suggestion à nouveau disponible.
+7. Exporter/restaurer sur une copie puis sur un autre appareil en 1.4.0 : choix ignorés et corrections conservés. Une ancienne sauvegarde sans choix reste restaurable.
+8. Supprimer une sortie sur une copie : ses choix ignorés sont nettoyés ; les couvertures des autres sorties restent présentes.
+9. Quitter/changer de sortie pendant l’analyse : aucun résultat d’une ancienne sortie ne doit remplacer celui de la sortie choisie. Tester fermeture du panneau et réouverture.
+10. Vérifier mode clair/sombre, boutons sur iPhone et analyse hors ligne après téléchargement complet. Tester une vraie sortie longue ; aucune performance iPhone n’est affirmée avant cette recette.
+
+Recette visuelle Mac/iPhone en attente. Le navigateur local n’était pas disponible pour la validation précédente ; cette livraison ne prétend pas remplacer les essais sur appareils réels.

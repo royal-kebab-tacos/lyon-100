@@ -1,21 +1,22 @@
+import type { IgnoredReview } from '../review/diagnostics'
 import type { Activity, Network, TrackPoint, MatchResult, Correction } from '../types'
 import { db, recalculateActivities, type LyonDatabase } from './database'
 import { fraction } from '../stats/progress'
 import { contentHash } from '../gpx/parse'
 import { MATCHING_PARAMETERS, MATCHING_VERSION, MAX_BACKUP_BYTES, MAX_BACKUP_POINTS, MAX_GPX_POINTS } from '../utils/config'
 import { lineLength, tracksLength, validCoordinate } from '../utils/geometry'
-export interface Backup { format: 'lyon-100-backup'; schemaVersion: 2; networkVersion: string; sourceHash: string; matchingVersion: string; parameters: typeof MATCHING_PARAMETERS; exportedAt: string; activities: Activity[]; corrections: Correction[] }
+export interface Backup { format: 'lyon-100-backup'; schemaVersion: 2; networkVersion: string; sourceHash: string; matchingVersion: string; parameters: typeof MATCHING_PARAMETERS; exportedAt: string; activities: Activity[]; corrections: Correction[]; reviewIgnored?: IgnoredReview[] }
 const invalid = () => new Error('Cette sauvegarde est invalide ou incompatible avec cette version de Lyon 100. Aucune donnée n’a été remplacée.')
 export async function exportBackup(network: Network, database = db): Promise<string> {
-  return database.transaction('r',database.activities,database.corrections,async()=>{
-  const backup: Backup = { format: 'lyon-100-backup', schemaVersion: 2, networkVersion: network.version, sourceHash: network.sourceHash, matchingVersion: MATCHING_VERSION, parameters: MATCHING_PARAMETERS, exportedAt: new Date().toISOString(), activities: await database.activities.toArray(), corrections: await database.corrections.toArray() }
+  return database.transaction('r',database.activities,database.corrections,database.settings,async()=>{
+  const backup: Backup = { format: 'lyon-100-backup', schemaVersion: 2, networkVersion: network.version, sourceHash: network.sourceHash, matchingVersion: MATCHING_VERSION, parameters: MATCHING_PARAMETERS, exportedAt: new Date().toISOString(), activities: await database.activities.toArray(), corrections: await database.corrections.toArray(), reviewIgnored: ((await database.settings.get('reviewIgnored'))?.value as IgnoredReview[]|undefined)||[] }
   return JSON.stringify(backup)
   })
 }
 function record(value: unknown): value is Record<string, unknown> { return !!value && typeof value === 'object' && !Array.isArray(value) }
 function date(value: unknown): value is string { return typeof value === 'string' && Number.isFinite(Date.parse(value)) }
 const hash = (v: unknown) => typeof v === 'string' && /^[a-f0-9]{64}$/.test(v)
-export async function validateBackup(text: string, network: Network, match: (tracks: TrackPoint[][]) => Promise<MatchResult>): Promise<{ activities: Activity[]; corrections: Correction[] }> {
+export async function validateBackup(text: string, network: Network, match: (tracks: TrackPoint[][]) => Promise<MatchResult>): Promise<{ activities: Activity[]; corrections: Correction[]; reviewIgnored?: IgnoredReview[] }> {
   if (new TextEncoder().encode(text).byteLength > MAX_BACKUP_BYTES) throw new Error('Cette sauvegarde dépasse la limite de 100 Mo.')
   let payload: unknown
   try { payload = JSON.parse(text) } catch { throw invalid() }
@@ -80,11 +81,22 @@ export async function validateBackup(text: string, network: Network, match: (tra
     const a: Activity = { id: input.id, name: input.name, fileName: input.fileName, importedAt: input.importedAt, date: input.date, gaps: input.gaps as number, rawHash: input.rawHash as string, contentHash: actualHash, networkVersion: network.version, matchingVersion: MATCHING_VERSION, tracks, distanceMeters: actualDistance, ...computed, newMeters: input.newMeters, newSegments: input.newSegments as number }
     ids.add(a.id); rawHashes.add(a.rawHash); contentHashes.add(a.contentHash); result.push(a)
   }
-  return {activities: legacy?await recalculateActivities(result,network,async tracks => {const found=result.find(a=>a.tracks===tracks)!;return {segmentIds:found.segmentIds,coverage:found.coverage}}):result,corrections}
+  const reviewIgnored:IgnoredReview[]=[]
+  if(payload.reviewIgnored!==undefined){
+    if(!Array.isArray(payload.reviewIgnored)||payload.reviewIgnored.length>100_000)throw invalid()
+    const seen=new Set<string>()
+    for(const item of payload.reviewIgnored){
+      if(!record(item)||typeof item.activityId!=='string'||!ids.has(item.activityId)||typeof item.segmentId!=='string'||!eligible.has(item.segmentId)||typeof item.version!=='string'||!/^\d{1,4}$/.test(item.version))throw invalid()
+      const key=JSON.stringify([item.activityId,item.segmentId,item.version]);if(seen.has(key))throw invalid();seen.add(key)
+      reviewIgnored.push({activityId:item.activityId,segmentId:item.segmentId,version:item.version})
+    }
+  }
+  return {activities: legacy?await recalculateActivities(result,network,async tracks => {const found=result.find(a=>a.tracks===tracks)!;return {segmentIds:found.segmentIds,coverage:found.coverage}}):result,corrections,reviewIgnored}
 }
-export async function restoreBackup(input: {activities:Activity[];corrections:Correction[]} | Activity[], network: Network, database: LyonDatabase = db) {
-  const {activities,corrections}=Array.isArray(input)?{activities:input,corrections:[]}:input
+export async function restoreBackup(input: {activities:Activity[];corrections:Correction[];reviewIgnored?:IgnoredReview[]} | Activity[], network: Network, database: LyonDatabase = db) {
+  const {activities,corrections,reviewIgnored=[]}=Array.isArray(input)?{activities:input,corrections:[]}:input
   await database.transaction('rw', database.activities, database.settings, database.corrections, async () => {
+    await database.settings.put({key:'reviewIgnored',value:reviewIgnored})
     await database.activities.clear()
     await database.activities.bulkAdd(activities)
     await database.corrections.clear()
