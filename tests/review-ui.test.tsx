@@ -31,3 +31,15 @@ it('hides portions that already have a manual correction',async()=>{
  expect(container.textContent).toContain('Aucune suggestion en attente')
  expect(container.querySelector('.review-row')).toBeNull()
 })
+
+it('hides resolved offsets but retains parallel-road doubts',async()=>{
+ vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT',true)
+ class OffsetWorker extends TestWorker {override postMessage(){queueMicrotask(()=>this.onmessage?.({data:{result:{suggestions:[{segmentId:'a',reason:'offset',distance:20}],truncated:false}}}))}}
+ vi.stubGlobal('Worker',OffsetWorker);root=createRoot(container)
+ const covered={...activity,coverage:{a:[[0,1]]}} as Activity
+ await act(async()=>root!.render(<ReviewPanel activity={covered} network={network} corrections={[]} busy={false} onInspect={()=>{}} onDecide={()=>{}} onReset={()=>{}} onClose={()=>{}}/>))
+ expect(container.querySelector('.review-row')).toBeNull()
+ vi.stubGlobal('Worker',TestWorker)
+ await act(async()=>root!.render(<ReviewPanel activity={{...covered}} network={network} corrections={[]} busy={false} onInspect={()=>{}} onDecide={()=>{}} onReset={()=>{}} onClose={()=>{}}/>))
+ expect(container.textContent).toContain('Deux voies parallèles')
+})

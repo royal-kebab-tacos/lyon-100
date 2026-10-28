@@ -13,7 +13,7 @@ const point=(x:number,y:number):Coordinate=>[4.83+x/sx,45.76+y/111195.08]
 const road=(id:string,y=0,x=0,length=100):Segment=>({id,osmWayId:id,name:id,highway:'residential',coordinates:[point(x,y),point(x+length,y)],lengthMeters:length})
 const track=(y=0):TrackPoint[]=>Array.from({length:11},(_,i)=>({coordinates:point(i*10,y),time:null}))
 describe('optional GPS hints',()=>{
- it('flags a sustained offset without changing matching coverage',()=>{const s=[road('a')],t=[track(18)];const before=matchSegments(s,t);expect(diagnose(s,t).suggestions).toEqual([expect.objectContaining({segmentId:'a',reason:'offset'})]);expect(matchSegments(s,t)).toEqual(before);expect(before.segmentIds).toEqual([])})
+ it('flags a sustained offset without changing matching coverage',()=>{const s=[road('a')],t=[track(18)];const before=matchSegments(s,t);expect(diagnose(s,t).suggestions).toEqual([expect.objectContaining({segmentId:'a',reason:'offset'})]);expect(matchSegments(s,t)).toEqual(before);expect(before.segmentIds).toEqual(['a'])})
  it('flags two plausible parallel ways',()=>{const r=diagnose([road('a'),road('b',10)],[track(5)]);expect(r.suggestions.map(s=>s.segmentId).sort()).toEqual(['a','b']);expect(r.suggestions.every(s=>s.reason==='parallel')).toBe(true)})
  it('does not mistake consecutive collinear ways for parallel ambiguity',()=>{expect(diagnose([road('a',0,0,50),road('b',0,50,50)],[track()]).suggestions).toEqual([])})
  it('does not flag a distant parallel road when a clear close road matches',()=>{expect(diagnose([road('a'),road('b',20)],[track()]).suggestions).toEqual([])})

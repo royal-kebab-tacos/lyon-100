@@ -1,4 +1,8 @@
 export const GPS_TOLERANCE_METERS = 15
+export const WIDE_STREET_TOLERANCE_METERS = 25
+export const WIDE_STREET_MIN_FOLLOW_METERS = 32
+export const WIDE_STREET_HEADING_DEGREES = 20
+export const WIDE_STREET_COMPETITOR_MARGIN_METERS = 5
 export const STREET_COMPLETION_THRESHOLD = 0.95
 export const SAMPLE_INTERVAL_METERS = 8
 export const MAX_HEADING_DIFFERENCE_DEGREES = 60
@@ -7,6 +11,6 @@ export const MAX_GPX_BYTES = 20 * 1024 * 1024
 export const MAX_GPX_POINTS = 100_000
 export const MAX_BACKUP_BYTES = 100 * 1024 * 1024
 export const MAX_BACKUP_POINTS = 1_000_000
-export const MATCHING_VERSION = '2.0.0'
-export const MATCHING_PARAMETERS = { toleranceMeters: GPS_TOLERANCE_METERS, unitMaxMeters: SEGMENT_MAX_METERS, sampleIntervalMeters: SAMPLE_INTERVAL_METERS, headingDifferenceDegrees: MAX_HEADING_DIFFERENCE_DEGREES, streetCompletionThreshold: STREET_COMPLETION_THRESHOLD }
+export const MATCHING_VERSION = '2.1.0'
+export const MATCHING_PARAMETERS = { toleranceMeters: GPS_TOLERANCE_METERS, wideStreetToleranceMeters: WIDE_STREET_TOLERANCE_METERS, wideStreetMinFollowMeters: WIDE_STREET_MIN_FOLLOW_METERS, wideStreetHeadingDegrees: WIDE_STREET_HEADING_DEGREES, wideStreetCompetitorMarginMeters: WIDE_STREET_COMPETITOR_MARGIN_METERS, unitMaxMeters: SEGMENT_MAX_METERS, sampleIntervalMeters: SAMPLE_INTERVAL_METERS, headingDifferenceDegrees: MAX_HEADING_DIFFERENCE_DEGREES, streetCompletionThreshold: STREET_COMPLETION_THRESHOLD }
 export const TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'

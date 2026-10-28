@@ -23,7 +23,7 @@ it('conserve les corrections après recalcul et dans les sauvegardes',async()=>{
 it('préserve les corrections incompatibles au lieu de les oublier',async()=>{await setCorrection('unit','include',network,db);await expect(ensureNetwork({...network,segments:[]},db)).rejects.toThrow(/corrections/);expect(await db.corrections.count()).toBe(1)})
 it('la somme des arrondissements égale Lyon',async()=>{const a=await add(),activities=[a];const sum=Array.from({length:9},(_,i)=>progress(network,activities,[],i+1).meters).reduce((a,b)=>a+b,0);expect(sum).toBe(progress(network,activities).meters)})
 it('normalise TCX avec timestamps et rejette un TCX invalide',()=>{const text='<TrainingCenterDatabase><Activities><Activity><Lap><Track><Trackpoint><Time>2026-01-01T10:00:00Z</Time><Position><LatitudeDegrees>45.75</LatitudeDegrees><LongitudeDegrees>4.83</LongitudeDegrees></Position></Trackpoint><Trackpoint><Time>2026-01-01T10:00:05Z</Time><Position><LatitudeDegrees>45.7501</LatitudeDegrees><LongitudeDegrees>4.83</LongitudeDegrees></Position></Trackpoint></Track></Lap></Activity></Activities></TrainingCenterDatabase>';const a=parseActivity(text,'run.tcx');expect(a.tracks[0]).toHaveLength(2);expect(a.date).toBe('2026-01-01T10:00:00.000Z');expect(()=>parseActivity('<broken>','x.tcx')).toThrow(/TCX/);expect(()=>parseActivity('','x.fit')).toThrow(/format/);expect(()=>parseActivity('<!DOCTYPE x><x/>','x.tcx')).toThrow(/TCX/)})
-it('recalcule une sauvegarde 1.1 au réseau corrigé sans perdre les corrections compatibles',async()=>{await add();await setCorrection('unit','remove',network,db);const json=JSON.parse(await exportBackup(network,db));json.networkVersion='lyon-v2-4615266167e59389';for(const a of json.activities)a.networkVersion=json.networkVersion;for(const c of json.corrections)c.networkVersion=json.networkVersion;const restored=await validateBackup(JSON.stringify(json),network,match);expect(restored.activities[0].networkVersion).toBe(network.version);expect(restored.corrections[0].networkVersion).toBe(network.version);expect(restored.corrections[0].action).toBe('remove')})
+it('recalcule une sauvegarde 1.1 au réseau corrigé sans perdre les corrections compatibles',async()=>{await add();await setCorrection('unit','remove',network,db);const json=JSON.parse(await exportBackup(network,db));json.networkVersion='lyon-v2-4615266167e59389';json.matchingVersion='2.0.0';for(const a of json.activities){a.networkVersion=json.networkVersion;a.matchingVersion='2.0.0'};for(const c of json.corrections)c.networkVersion=json.networkVersion;const restored=await validateBackup(JSON.stringify(json),network,match);expect(restored.activities[0].networkVersion).toBe(network.version);expect(restored.corrections[0].networkVersion).toBe(network.version);expect(restored.corrections[0].action).toBe('remove')})
 it('restaure malgré les derniers bits différents entre moteurs JavaScript',async()=>{
  await add();const json=JSON.parse(await exportBackup(network,db));
  const pair=json.activities[0].coverage.unit[0];pair[1]-=3e-14;
@@ -38,5 +38,19 @@ it('refuse toujours une différence réelle de couverture sans modifier la base'
 })
 it('refuse une fraction non numérique dans une sauvegarde',async()=>{
  await add();const json=JSON.parse(await exportBackup(network,db));json.activities[0].coverage.unit[0][1]=null;
+ await expect(validateBackup(JSON.stringify(json),network,match)).rejects.toThrow(/incompatible/)
+})
+
+it('recalcule une sauvegarde matching 2.0 et conserve ses corrections',async()=>{
+ await add();await setCorrection('unit','remove',network,db)
+ const json=JSON.parse(await exportBackup(network,db));json.matchingVersion='2.0.0'
+ for(const a of json.activities){a.matchingVersion='2.0.0';a.coverage={};a.segmentIds=[];a.newMeters=0;a.newSegments=0}
+ const result=await validateBackup(JSON.stringify(json),network,match)
+ expect(result.activities[0].matchingVersion).toBe('2.1.0');expect(result.activities[0].coverage).toEqual((await match(parsed.tracks)).coverage)
+ expect(result.corrections[0].action).toBe('remove');expect(result.activities[0].newMeters).toBeGreaterThan(0)
+})
+it('refuse une version future de matching au lieu de la recalculer implicitement',async()=>{
+ await add();const json=JSON.parse(await exportBackup(network,db));json.matchingVersion='9.0.0'
+ for(const a of json.activities)a.matchingVersion='9.0.0'
  await expect(validateBackup(JSON.stringify(json),network,match)).rejects.toThrow(/incompatible/)
 })

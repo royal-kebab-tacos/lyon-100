@@ -98,3 +98,11 @@ Sources officielles consultées pour la préparation :
 - Apple Plans, parcours à pied créés manuellement : https://support.apple.com/en-mide/guide/iphone/iph3d7ebd491/27/ios/27
 
 Aucun flux officiel d'import GPX vers Plans iPhone n'a été confirmé dans cette recherche. Vérifier la compatibilité réelle à la livraison du générateur ; ne pas confondre ouvrir le point de départ, afficher une trace et être guidé sur cette trace.
+
+## Retour trottoirs et rues larges — priorité avant les parcours
+
+- [x] 1.6.0 : extension conditionnelle 15→25 m sur un suivi longitudinal ≥32 m, concurrence entre voies vérifiée, chaînes normales préservées, recalcul automatique et sauvegardes précédentes compatibles.
+- [x] Masquer les suggestions de décalage déjà entièrement couvertes ; conserver les doutes sur les voies parallèles.
+- [ ] Recette sur les traces exactes des captures Avenue de Grande-Bretagne / Rue de la Madeleine : les captures seules ne donnent ni l'activité ni ses points GPS. La comparaison de l'ancienne sauvegarde n'est pas une preuve que ces deux cas sont corrigés.
+- [ ] Si le problème restant est la double représentation d'une même avenue : concevoir un regroupement de chaussées/trottoirs explicitement associés, avec métrique unique, géométrie cohérente et migration des corrections. Ne pas se contenter du nom ou de la proximité ; préserver quais, niveaux et voies indépendantes.
+- Les étapes exploration locale, graphe routable, prototype de boucles avec budget de calcul puis GPX restent prioritaires ensuite ; aucune promesse d'optimum global. Les autres demandes restent conservées.

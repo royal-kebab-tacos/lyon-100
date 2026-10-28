@@ -227,3 +227,13 @@ La carte prépare uniquement les rues proches de la zone affichée et réutilise
 Après la mise à jour, vérifiez **1.5.0** dans Réglages, puis zoomez sur votre quartier, déplacez la carte et essayez les filtres. Testez aussi **À vérifier** sur une sortie connue. Il n'est pas nécessaire de supprimer l'application ou de restaurer vos données pour cette mise à jour.
 
 La prochaine priorité sera l'exploration près d'un point choisi, puis les boucles et l'export GPX après préparation d'un réseau de navigation fiable. Cette fonction n'attendra pas la connexion automatique à Strava. L'import de vos propres itinéraires dans Strava dépend de ses fonctions payantes ; nous vérifierons une solution gratuite pour suivre le GPX sur iPhone. Les autres demandes sont conservées dans ROADMAP.md.
+
+## Nouveautés 1.6.0 : moins de corrections pour les décalages GPS simples
+
+Une trace qui longe une rue depuis un trottoir éloigné peut maintenant être reconnue jusqu'à **25 mètres de son axe**, si elle reste alignée sur au moins **32 mètres**, sans voie concurrente proche. La tolérance habituelle reste de 15 mètres. Cela ne valide pas toute une rue parce que vous la croisez ou passez à proximité. Les petits traits restent une unité de dessin, pas une obligation de les vérifier un par un.
+
+Au premier démarrage de cette version, laissez l'application terminer le recalcul de vos anciennes sorties. Aucun réimport GPX nécessaire. Vos corrections restent prioritaires ; une copie de récupération locale est conservée lors du recalcul. Exporter une sauvegarde reste conseillé. Les sauvegardes des versions précédentes sont acceptées ; une sauvegarde créée en 1.6.0 nécessite cette version ou une version compatible sur l'autre appareil.
+
+Dans « À vérifier », les décalages déjà entièrement résolus par le calcul ne sont plus proposés. Les vraies ambiguïtés entre voies proches restent disponibles, sans obligation de les traiter.
+
+Cette version ne fusionne pas automatiquement deux chaussées parallèles d'une avenue ni un quai bas avec la rue au-dessus. Le GPS ne suffit pas toujours pour les distinguer. Le regroupement des représentations d'une même rue reste une amélioration séparée à tester ; cette marge ne garantit pas la correction de chaque trou visible sur les captures.

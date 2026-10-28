@@ -23,7 +23,8 @@ export async function validateBackup(text: string, network: Network, match: (tra
   if (!record(payload) || payload.format !== 'lyon-100-backup' || ![1,2].includes(payload.schemaVersion as number) || !date(payload.exportedAt) || !Array.isArray(payload.activities)) throw invalid()
   const legacyV1=payload.schemaVersion===1 && payload.matchingVersion==='1.0.0'
   const previousNetwork=payload.schemaVersion===2 && payload.networkVersion==='lyon-v2-4615266167e59389' && payload.matchingVersion==='2.0.0' && payload.sourceHash===network.sourceHash
-  const legacy=legacyV1 || (previousNetwork && payload.networkVersion!==network.version)
+  const previousMatching=payload.schemaVersion===2 && payload.networkVersion===network.version && payload.sourceHash===network.sourceHash && payload.matchingVersion==='2.0.0'
+  const legacy=legacyV1 || (previousNetwork && payload.networkVersion!==network.version) || previousMatching
   if(!legacy && (payload.schemaVersion!==2 || payload.networkVersion!==network.version || payload.sourceHash!==network.sourceHash || payload.matchingVersion!==MATCHING_VERSION))throw invalid()
   const corrections:Correction[]=[]
   if(!legacyV1){

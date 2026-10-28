@@ -150,3 +150,24 @@ Recette visuelle Mac/iPhone en attente. Le navigateur local n’était pas dispo
 6. Vérifier les cinq onglets en portrait/paysage et en clair/sombre, aucun bouton masqué.
 7. Après chargement complet, tester hors connexion : rues et données consultables, fond éventuellement absent.
 8. Comparer le ressenti des déplacements avec/sans fond cartographique pour distinguer le dessin des rues et le téléchargement des tuiles. Rapporter le cas encore lent avant le lot de parcours.
+
+## Lot 1.6.0 — tolérance conditionnelle
+
+- 129 tests réussis ; lint, TypeScript et build de production réussis. Avertissements non bloquants Vite/configuration native et taille du bundle inchangés.
+
+- Tests ajoutés : décalages ±18/24 m, longueur partielle, rejet à 26 m, passage court, aller-retour et pistes séparées, croisement, rue voisine et concurrente à 28 m, même nom sur deux axes, chemins indépendants, niveaux/pont, transitions vers la marge normale.
+- Compatibilité : restauration matching 2.0.0 recalculée, corrections conservées, version future refusée ; tests existants d'atomicité, échec et modification dans un autre onglet conservés.
+- Composant jsdom : suggestion de décalage résolue masquée, doute parallèle conservé.
+- Comparaison locale sur 81 anciennes activités réelles : 107 479,42 m uniques avant, 107 517,04 m après (+37,62 m). Aucune activité ne perd de longueur couverte. Comparaison des deux moteurs : environ 13,6 s sur le runtime local, pas une mesure iPhone. Données personnelles et résultats détaillés restent hors dépôt.
+- Le réseau et le dénominateur ne changent pas. Aucun changement de schéma IndexedDB ; version de matching 2.1.0, application 1.6.0.
+
+### Recette manuelle Mac puis iPhone
+
+1. Exporter une sauvegarde ; ouvrir 1.6.0 et laisser finir le recalcul automatique. Vérifier nombre de sorties et corrections. Ne pas supprimer l'application ni réimporter les GPX.
+2. Comparer une vraie portion de rue large à sa trace orange : une progression longitudinale peut compter malgré un décalage 15–25 m ; un croisement seul doit rester non validé.
+3. Contrôler une rue parallèle non faite, un quai bas/haut, un pont et un chemin de parc : absence de crédit supplémentaire uniquement dû à la proximité.
+4. Ouvrir À vérifier : décalages résolus masqués, ambiguïtés persistantes consultables.
+5. Tester restauration d'une ancienne sauvegarde sur une copie ; corrections et activités conservées, progression recalculée. Tester transfert vers un autre appareil également en 1.6.0.
+6. Fermer/réouvrir après le recalcul : pas de recalcul répété. Tester carte, filtres et zoom.
+
+Recette visuelle réelle non effectuée dans cet environnement. Les deux captures fournies ne suffisent pas à certifier un résultat de matching sans leurs traces correspondantes.
