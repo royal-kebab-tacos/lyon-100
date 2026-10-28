@@ -5,3 +5,39 @@
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition:none!important}}
 .background-toggle{position:absolute;right:12px;top:12px;z-index:700;display:flex;flex-direction:column;align-items:flex-end;gap:5px;max-width:240px}.background-toggle button{border:1px solid #dce4d6;background:#fffffff2;border-radius:6px;padding:9px 12px;min-height:36px;font-size:10px;color:#557149}.background-toggle span{background:#fff8e8;padding:8px;border-radius:5px;font-size:10px;line-height:1.5}.map-offline{top:58px}
 .zone-tools,.map-tools{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:12px 0;color:#456357}.zone-tools select{padding:10px 16px;margin-left:10px;border:1px solid #c7d2c5;border-radius:10px;background:#fff;font:inherit}.map-tools{padding:0 20px}.map-tools small{flex-basis:100%}.street-detail{position:relative;padding:20px;background:#edf4e9;border-top:1px solid #c7d2c5}.street-detail p{line-height:1.7}.district-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:20px}.district-card{display:flex;flex-direction:column;text-align:left;gap:10px;padding:16px;background:#fff;border:1px solid #d5dfd2;border-radius:12px;color:#234f3d}.district-card.selected{border:2px solid #167755;background:#edf6ea}.street-row .text-button{font-size:12px;margin-top:8px}.setting-buttons{flex-wrap:wrap}.map-tools .filters{flex-wrap:wrap}
+/* Appearance and the compact progression overview. Map tiles retain provider colors. */
+.overview-highlights{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.milestone-note{font-size:12px;line-height:1.7;margin:0 0 16px;color:#526b5d}
+.milestones{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.milestone{padding:5px 7px;border:1px solid #c4cec6;border-radius:6px;font-size:11px;color:#526b5d;background:#f5f6f2}
+.milestone.reached{background:#dceedd;border-color:#497852;color:#234f3d;font-weight:700}
+.theme-picker{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.theme-picker select{font:inherit;padding:10px;border-radius:8px;border:1px solid #c7d2c5;background:#fff;color:inherit;min-height:44px}
+:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark;color:#e5eee7;background:#101c17}
+[data-theme=dark] :is(.topbar,.navigation,.stats-grid,.map-card,.panel,.district-card,.confirm-dialog,.button,.zone-tools select,.theme-picker select){background:#192c23;color:#e5eee7;border-color:#3e5548}
+[data-theme=dark] :is(.stat-main,.street-detail,.district-card.selected,.activity-symbol,.invite-icon,.count-badge,.processing){background:#243f30;color:#def1dd;border-color:#6d9c77}
+[data-theme=dark] :is(.brand small,.desktop-note,.nav-item,.local-note,.eyebrow,.subtitle,.city-tag,.city-tag span,.stat-label,.stat-foot,.stat em,.legend,.map-footer,.bottom-tip p,.app-footer,.muted,.table-note,.street-row span,.empty-copy,.empty-state,.empty-state p,.activity-description p,.activity-description small,.setting-panel p,.setting-panel small,.setting-panel ol,.parameters dt,.confirm-dialog p,.processing small,.zone-tools,.map-tools,.milestone-note){color:#b2c5b5}
+[data-theme=dark] :is(.stat-main strong,.nav-item.active,.bottom-tip strong,.empty-state h3,.update-notice,.offline-ready){color:#b2e2b7}
+[data-theme=dark] :is(.stat,.section-bar,.street-row,.activity-row,.parameters>div,.app-footer){border-color:#3e5548}
+[data-theme=dark] .button:hover{background:#304f3a}
+[data-theme=dark] :is(.button.primary,.filters button.selected){background:#367c53;color:#fff;border-color:#73a987}
+[data-theme=dark] :is(.button.danger,.icon-button:hover){background:#442c29;color:#ffb5a7;border-color:#a36c62}
+[data-theme=dark] .danger{color:#ffb5a7}
+[data-theme=dark] .filters button{background:#2a4033;color:#deeadf}
+[data-theme=dark] .search{border-color:#6a846f;color:#c2d8c4}
+[data-theme=dark] input{color:#e5eee7}
+[data-theme=dark] input::placeholder{color:#a8baac}
+[data-theme=dark] .progress-track{background:#3e5548}
+[data-theme=dark] .progress-track span{background:#84c18c}
+[data-theme=dark] .milestone{background:#23392c;color:#c1d1c3;border-color:#526c58}
+[data-theme=dark] .milestone.reached{background:#365d40;color:#e4f6df;border-color:#9bcb9f}
+[data-theme=dark] :is(.map-wrap,.city-map){background:#21372b}
+[data-theme=dark] :is(.map-invite,.background-toggle button){background:#192c23f5;color:#e5eee7;border-color:#69846e}
+[data-theme=dark] .map-invite p{color:#b2c5b5}
+[data-theme=dark] :is(.messages,.map-offline,.background-toggle span){background:#403923;color:#f3e5c0;border-color:#8c7a44}
+[data-theme=dark] .error-panel{background:#442c29;color:#ffe4dc;border-color:#a36c62}
+[data-theme=dark] .drop-overlay{background:#192c23ee;color:#e5eee7;border-color:#a1cea4}
+[data-theme=dark] .leaflet-control-attribution{background:#192c23ed;color:#d2ded5}
+[data-theme=dark] .leaflet-control-attribution a{color:#b2e2b7}
+@media(max-width:700px){.overview-highlights{grid-template-columns:1fr}.milestones{gap:4px}.milestone{font-size:10px;padding:5px}}

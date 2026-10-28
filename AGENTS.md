@@ -1,6 +1,6 @@
 # Lyon 100 — référence produit durable
 
-Révision du 26 octobre 2026, fondée sur la demande complète A–Z d’Arthur. Cette référence remplace les choix incompatibles du plan initial `Lyon-100-Plan-V1.md`. `ROADMAP.md` décrit les versions et le travail restant ; ne pas implémenter les versions futures spontanément.
+Révision du 28 octobre 2026, fondée sur la demande complète A–Z d’Arthur. Cette référence remplace les choix incompatibles du plan initial `Lyon-100-Plan-V1.md`. `ROADMAP.md` décrit les versions et le travail restant ; ne pas implémenter les versions futures spontanément.
 
 ## Finalité et limites
 Application strictement personnelle pour explorer à pied/course les voies raisonnablement accessibles de la commune de Lyon (INSEE 69123), par import d’activités. Arthur n’est pas développeur : effectuer les opérations autorisées, prendre les décisions mineures, expliquer simplement, fournir une mise à jour utilisable et un README accessible. Conserver l’existant, ne pas repartir de zéro.
@@ -46,7 +46,11 @@ Export/import JSON manuel complet, validation avant confirmation puis remplaceme
 ## Hors ligne et évolution
 Après premier chargement : shell, réseau, activités, progression et statistiques consultables hors connexion. Fond de carte éventuellement indisponible, ce qui est acceptable en V1. Respecter le fournisseur de tuiles. Mise à jour PWA proposée hors import, jamais forcée pendant une mutation.
 
-La vision future inclut historique, tableau de bord simple, jalons 25/50/75/100 %, clair/sombre/système, section ambiguïtés À vérifier, Strava automatique, génération de parcours agréables maximisant les nouvelles voies. Détails et priorités dans ROADMAP ; aucune architecture SaaS préventive.
+Le tableau de bord reste dans Progression, sans navigation supplémentaire : Lyon, neuf zones, kilomètres uniques/restants, rues terminées/total. Les jalons 25/50/75/100 % suivent les mètres effectifs ; 95 % termine le statut d’une rue, jamais le jalon 100 %. L’arrondissement le plus avancé maximise le pourcentage ; le plus proche des 100 % minimise les kilomètres restants parmi les zones encore incomplètes. En cas d’égalité, ordre numérique stable. Une zone sans voie éligible n’atteint aucun jalon.
+
+Thème clair/sombre/système, Système par défaut, changement système suivi en direct. Préférence locale dans settings, sans migration des activités ; elle reste propre à l’appareil et n’est pas exportée dans la sauvegarde des sorties. Les tuiles gardent leur style d’origine et peuvent être masquées avec le contrôle existant.
+
+La vision future inclut historique global et par arrondissement, gains hebdomadaires/mensuels, évolution récente du tableau de bord, section ambiguïtés À vérifier facultative, Strava automatique, génération de boucles 5/8/10/15 km avec départ et arrondissement cible puis export GPX. Aucun classement de sorties, notes, quartiers, carte de chaleur, double score OSM/accessibilité, mode course tranquille, points, badges, niveaux, streaks ou notifications de fin de course. Détails et priorités dans ROADMAP ; aucune architecture SaaS préventive.
 
 ## Validation obligatoire
 Tests : 60/100 m partiels ; 96/100 m terminés sans gonflement ; enchaînement connecté ; croisement ; rues parallèles ; GPS légèrement décalé ; revisite unique ; union 50+48=98 % ; suppression partagée. Ajouter migration/échec/rollback, corrections prioritaires, arrondissements sans double compte, sauvegarde et parsing.

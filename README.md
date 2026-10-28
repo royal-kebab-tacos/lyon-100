@@ -185,3 +185,11 @@ Le shell et le réseau sont précachés ; activités et progression restent loca
 Dépôt privé : https://github.com/royal-kebab-tacos/lyon-100. Relier le projet Netlify existant, branche main. La configuration netlify.toml définit Node 24, la commande npm run check et le dossier publié dist. Les tests doivent réussir avant chaque déploiement. Aucun compte, historique GPX ou JSON personnel ne doit être ajouté au dépôt.
 
 Les fichiers OSM volumineux sont compressés et répartis dans data/bundled. Après npm ci, ils sont reconstitués automatiquement et leur SHA-256 est vérifié. Le réseau est identique à la version 1.1.2 validée. Après une modification volontaire des données avec npm run prepare, exécuter node scripts/bundle-data.mjs avant de publier le commit, avec public/data/provenance.json. Ne pas éditer les morceaux manuellement.
+
+## Nouveautés 1.2.0
+
+Dans **Réglages → Apparence**, choisissez Clair, Sombre ou Système. Le choix est mémorisé sur cet appareil. Le fond de carte conserve ses couleurs ; vous pouvez le masquer avec le bouton existant. La sauvegarde JSON transfère vos activités et corrections, pas cette préférence d’affichage.
+
+Dans **Progression**, consultez les jalons 25/50/75/100 % de Lyon et des neuf arrondissements, l’arrondissement le plus avancé et celui qui a le moins de kilomètres à parcourir avant 100 %. Une rue terminée à 95 % ne crédite pas les mètres manquants. Les voies sans nom comptent toujours dans les kilomètres.
+
+Après publication Netlify, acceptez la mise à jour proposée par Lyon 100. Vérifiez dans Réglages que la version indique **1.2.0**. Vos sorties n’ont pas besoin d’être réimportées.

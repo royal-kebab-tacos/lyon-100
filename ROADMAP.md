@@ -1,6 +1,6 @@
 # Lyon 100 — roadmap produit
 
-Révision : 26 octobre 2026. Les invariants durables sont dans AGENTS.md. `[x]` signifie implémenté et vérifié automatiquement ou dans la recette documentée ; cela ne remplace pas les validations réelles encore ouvertes. Le plan initial est historique.
+Révision : 28 octobre 2026. Les invariants durables sont dans AGENTS.md. `[x]` signifie implémenté et vérifié automatiquement ou dans la recette documentée ; cela ne remplace pas les validations réelles encore ouvertes. Le plan initial est historique.
 
 ## V1 stabilisée — ordre des dépendances
 
@@ -31,11 +31,13 @@ Révision : 26 octobre 2026. Les invariants durables sont dans AGENTS.md. `[x]` 
 ## V1.5 — après validation de la couverture centrale
 
 - Historique temporel : évolution globale, nouvelles voies par semaine/mois, évolution par arrondissement. Utiliser dates et couvertures des activités conservées ; définir le comportement de l’historique après suppression/correction.
-- Tableau de bord enrichi, sobre : Lyon, neuf zones, kilomètres uniques/restants, rues terminées/total, arrondissement le plus avancé et le plus proche d’être terminé, évolution récente. Définir « proche » en kilomètres restants.
-- Jalons 25/50/75/100 % pour Lyon et chaque arrondissement, sans points ni badges. Un jalon reflète les mètres effectifs, pas les statuts de rues.
+- [x] Premier lot 1.2.0 : synthèse Lyon/neuf zones dans Progression, kilomètres uniques/restants, rues terminées/total, arrondissement le plus avancé et plus proche des 100 % (kilomètres restants). Couverture fusionnée une fois pour le tableau.
+- [ ] Évolution récente : dépend de l’historique temporel ci-dessous.
+- [x] Jalons 25/50/75/100 % pour Lyon et chaque arrondissement, sans points ni badges. Un jalon reflète les mètres effectifs, pas les statuts de rues.
 - À vérifier : portions ambiguës (parallèles, GPS imprécis, incertitude). Valider/refuser/ignorer, sans rendre chaque import pénible ; s’appuyer sur les corrections séparées.
 - Filtres avancés et sélection locale de zone ; améliorer la consultation hors ligne en respectant les conditions des fonds de carte.
-- Thème clair/sombre/système.
+- [x] Thème clair/sombre/système (1.2.0), préférence IndexedDB sur cet appareil ; fond de carte inchangé.
+- [ ] Recette visuelle Safari/iPhone du mode sombre et du changement de thème système.
 - Import direct d’une archive ZIP Strava, traitement local borné, réutilisation des parseurs normalisés et de l’antidoublon. Dépend du support FIT si l’archive en contient.
 
 ## V2 — Strava automatique
@@ -56,3 +58,16 @@ Boucles humaines et agréables de 5/8/10/15 km, point de départ et arrondisseme
 ## Fonctionnalités explicitement refusées
 
 Progression par quartier, carte de chaleur, classement des sorties, notes personnelles, scores séparés OSM brut/accessibilité, mode « courir tranquille », points, badges, achievements, niveaux, streaks, gamification complexe, notifications de fin de course, multi-utilisateur, comptes/profils/permissions et architecture SaaS. Pas de backend, OAuth Strava, routage ou application iOS native dans le présent chantier.
+
+## Audit du prompt produit et ordre des prochains lots (28 octobre 2026)
+
+Les sections 1 à 7 du prompt sont déjà couvertes par la V1 : géographie, trois états, seuil 95 %, éligibilité, fiche/liste des rues, import/historique des sorties, corrections séparées. La section 9 est couverte par déplacement/zoom et filtre Restantes. Le hors-ligne de la section 15 précharge shell et données, avec limite du fond cartographique documentée. Aucune modification du matching ni du réseau dans le lot 1.2.0.
+
+1. **Livré dans ce lot : apparence, synthèse et jalons** (sections 12, 13 partiellement, 14). Aucun changement de schéma IndexedDB, de couverture ou de sauvegarde. Les corrections actualisent immédiatement les synthèses. Choix de thème local à l’appareil, non transféré par JSON.
+2. **Historique temporel, puis évolution récente** (sections 11 et fin de 13). Les dates d’activité/import et couvertures permettent déjà de reconstruire des unions cumulées, sans nouveau matching. Recalculer par date de sortie, avec importedAt comme repli explicite pour les sorties sans date ; semaines ISO et mois selon Europe/Paris. Supprimer une sortie réécrit l’historique reconstruit. Une correction possède seulement son dernier updatedAt : impossible de reconstituer honnêtement ses anciennes valeurs ou les corrections effacées. Choix : montrer d’abord un historique automatique des sorties, clairement distinct de la progression actuelle corrigée. Si l’historique exact des corrections devient nécessaire, ajouter un journal versionné et l’inclure dans la sauvegarde ; ne pas inventer le passé. Le réseau et le dénominateur courants servent de référence fixe, documentée. Calcul incrémental dans un Worker pour éviter activités × réseau × dates sur le thread principal. Tests : import désordonné, doublon spatial, suppression partagée, date manquante, frontières semaine/mois et corrections.
+3. **Segments à vérifier facultatifs** (section 8). Le matcher renvoie actuellement uniquement les portions retenues, pas les candidats rejetés ni leur confiance. Étendre son résultat avec motifs explicites (parallèle, distance, continuité) et version du diagnostic, puis stockage séparé des suggestions et décisions. Nécessite migration IndexedDB et extension rétrocompatible de sauvegarde si les décisions sont persistées. Réutiliser les corrections existantes pour valider/refuser, sans transformer toute trace proche en suggestion et sans bloquer les imports.
+4. **Confort local et hors-ligne** : filtres avancés et amélioration d’état hors connexion après mesures réelles. Pas de cache massif de tuiles. Le compteur « X rues restantes ici » reste pour plus tard, conformément au prompt.
+5. **Strava V2** (section 16) : stockage serveur sécurisé des jetons, OAuth et mécanisme d’acquisition automatique ; identifiant d’activité fournisseur en plus des hashes de traces pour éviter les doublons entre import manuel et récupération. Un seul propriétaire, aucun compte interne multi-utilisateur.
+6. **Parcours V3** (section 10) : données de routage enrichies avec accès piétons, barrières et connectivité réelle ; boucles 5/8/10/15 km, départ/cible, export GPX. Ne pas réutiliser sans validation le graphe simplifié du matching. La génération devra rester indépendante de la couverture enregistrée et ne jamais créditer une route simplement proposée.
+
+Les demandes de sauvegarde cloud, envoi vers Strava après un éventuel enregistrement, image partageable et compteur local restent listées dans « Plus tard ». Aucun besoin actuel de refondre NormalizedActivity, les intervalles de couverture ou les corrections. Les évolutions de modèle ci-dessus seront réalisées avec leurs fonctionnalités, tests de migration et sauvegardes compatibles, pas préventivement.

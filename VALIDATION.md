@@ -65,3 +65,25 @@ La sauvegarde du 26 octobre a reproduit le refus au contrôle de couverture : 81
 
 ## Préparation GitHub / Netlify
 69 tests, lint, TypeScript et build passent après reconstitution des deux fichiers OSM compressés. L’intégrité des fichiers reconstitués est vérifiée par SHA-256. La configuration Netlify impose les contrôles avant publication. La connexion du site existant au dépôt nécessite encore l’autorisation de son propriétaire dans Netlify.
+
+## Lot 1.2.0 — 28 octobre 2026
+
+- 73 tests automatisés réussis, lint, TypeScript et build de production réussis.
+- Nouveaux cas : union partagée, unités aux frontières sans double comptage, statut 95 % distinct du jalon 100 %, corrections/exclusions, suppression, sélection des arrondissements et zones vides.
+- Aucun changement des règles OSM, du matching, du schéma IndexedDB ou du format de sauvegarde.
+- Réseau complet conservé dans le build PWA. Pas de dépendance ajoutée.
+- Vérification visuelle locale non réalisée : Chromium absent et téléchargement Playwright inutilisable dans cet environnement. Le serveur Vite annonce son démarrage en boucle locale, mais la connexion depuis une commande séparée échoue. Ne pas présenter ceci comme une recette navigateur réussie.
+
+### Recette Mac puis iPhone pour ce lot
+
+1. Exporter une sauvegarde, accepter la mise à jour hors import, vérifier Application 1.2.0 dans Réglages.
+2. Comparer nombre d’activités, kilomètres et pourcentage avec la version précédente : identiques sans nouvelle importation/correction.
+3. Réglages → Apparence : Clair, Sombre, Système ; vérifier textes, boutons, confirmations, champs, attribution et navigation sur les quatre écrans. Les tuiles restent dans leur style original ; vérifier aussi fond masqué.
+4. Recharger après choix Sombre : préférence conservée. Passer à Système puis changer l’apparence de l’appareil : réaction sans rechargement.
+5. Progression : Lyon + neuf zones, jalons, synthèses, sélection de zone et liste de rues. Aucun débordement horizontal à 390 px et en orientation paysage.
+6. Vérifier sur une rue à 95–99 % : statut terminée, mais kilomètres restants et jalon 100 % non acquis pour la zone incomplète.
+7. Sur une copie de test, ajouter/retirer une correction puis revenir en automatique : tableaux actualisés et chiffres revenus à leur valeur précédente.
+8. Répéter sur iPhone installé, fermer/rouvrir ; consulter Progression et Réglages hors ligne après un chargement complet. Le fond de carte peut manquer, les données doivent rester visibles.
+9. Sur une copie de test, restaurer le JSON : activités/corrections conservées, préférence de thème de l’appareil inchangée.
+
+Cette liste reste à valider sur les appareils réels ; le passage des tests automatisés ne la remplace pas.
