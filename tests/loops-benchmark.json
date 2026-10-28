@@ -1,0 +1,100 @@
+{
+  "realBackup": false,
+  "sourceHash": "a33f821bf432a7c60ebaac687943f9bff0b57d726321243de549bcfdd0beb7a8",
+  "networkVersion": "lyon-v2-f1a372ba1520e6fa",
+  "linkMs": 1063,
+  "rewardMs": 367,
+  "linkedSegments": 87216,
+  "totalSegments": 127122,
+  "linkedMeters": 707408,
+  "totalMeters": 1078663,
+  "results": [
+    {
+      "targetMeters": 5000,
+      "elapsedMs": 1259,
+      "status": "complete",
+      "visited": 659604,
+      "attempts": 24,
+      "proposals": [
+        {
+          "meters": 5680,
+          "newMeters": 3462,
+          "repeatedMeters": 1710
+        },
+        {
+          "meters": 5482,
+          "newMeters": 2899,
+          "repeatedMeters": 478
+        },
+        {
+          "meters": 5911,
+          "newMeters": 2890,
+          "repeatedMeters": 356
+        }
+      ]
+    },
+    {
+      "targetMeters": 8000,
+      "elapsedMs": 1550,
+      "status": "budget",
+      "visited": 800000,
+      "attempts": 14,
+      "proposals": [
+        {
+          "meters": 9111,
+          "newMeters": 4410,
+          "repeatedMeters": 75
+        },
+        {
+          "meters": 9447,
+          "newMeters": 3680,
+          "repeatedMeters": 153
+        }
+      ]
+    },
+    {
+      "targetMeters": 10000,
+      "elapsedMs": 1801,
+      "status": "budget",
+      "visited": 800000,
+      "attempts": 12,
+      "proposals": [
+        {
+          "meters": 11850,
+          "newMeters": 4065,
+          "repeatedMeters": 1366
+        },
+        {
+          "meters": 9447,
+          "newMeters": 3680,
+          "repeatedMeters": 153
+        }
+      ]
+    },
+    {
+      "targetMeters": 15000,
+      "elapsedMs": 1992,
+      "status": "budget",
+      "visited": 800000,
+      "attempts": 9,
+      "proposals": [
+        {
+          "meters": 15357,
+          "newMeters": 7202,
+          "repeatedMeters": 2240
+        },
+        {
+          "meters": 12251,
+          "newMeters": 5930,
+          "repeatedMeters": 2905
+        },
+        {
+          "meters": 14976,
+          "newMeters": 5712,
+          "repeatedMeters": 1032
+        }
+      ]
+    }
+  ],
+  "purpose": "Prototype benchmark with empty activity coverage, not personal activity data or field navigation validation"
+}

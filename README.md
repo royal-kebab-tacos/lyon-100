@@ -271,3 +271,11 @@ Pour travailler sur le moteur (développement uniquement) :
 Les fichiers générés sont dans `.osm-cache/`, pas dans le site ni dans les sauvegardes. L’extracteur refuse un PBF incomplet avant de remplacer une archive existante. L’ancien fichier du score peut servir à mesurer la topologie via `npm run routing:prepare`, mais son absence de tags de nœuds/restrictions interdit l’usage normal du moteur de routage. Les mesures de benchmark ne sont pas des consignes de navigation.
 
 Références du profil OSM : [accès](https://wiki.openstreetmap.org/wiki/Key:access), [sens piétons](https://wiki.openstreetmap.org/wiki/Key:oneway:foot), [barrières](https://wiki.openstreetmap.org/wiki/Barriers). Les règles retenues sont volontairement conservatrices, sans garantie d’exhaustivité ni d’accessibilité réelle.
+
+## Prototype de propositions de boucles
+
+Après préparation du graphe : `npm run routing:loops` prépare les correspondances avec le réseau de progression, puis essaie des boucles 5/8/10/15 km avec un départ de test près d’un repère public. La couverture est vide par défaut ; pour un diagnostic local seulement, un chemin de sauvegarde peut être fourni en argument. Les sorties personnalisées restent dans `.osm-cache/` et ne doivent pas être publiées.
+
+Ce prototype privilégie des portions restantes identifiées sans compter deux fois un passage. Il compare au maximum 24 combinaisons avec un budget commun ; il peut retourner moins de trois propositions, voire aucune. Les distances peuvent s’écarter de ±20 % de la demande. Les nouvelles portions sont des estimations conservatrices : une partie des axes du score n’est pas associée aux cheminements du réseau piéton. Aucun gain n’est enregistré tant qu’une activité réellement effectuée n’est pas importée.
+
+Le moteur et son Worker ne sont pas encore exposés dans l’application. Le prochain lot doit intégrer le chargement des données, le choix du départ, l’annulation, l’affichage puis l’export GPX. Aucun changement visible ni nouvelle version de l’interface dans ce lot.

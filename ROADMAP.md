@@ -139,3 +139,14 @@ Arthur demande de passer aux autres mises à jour dans l’ordre. Les trous/trot
 - [ ] Interface de propositions et export GPX après ces contrôles ; essai dans une application iPhone gratuite.
 
 Ce lot est technique : pas de changement visuel ni d’activation de navigation, application toujours 1.8.0. Les demandes différées (trottoirs, Strava, FIT/ZIP, cloud) restent conservées.
+
+## Prototype de boucles et raccordement au score
+
+- [x] Raccordement conservateur entre snapshots : identité OSM + niveau + géométrie quasi identique ; intervalles partiels, union sans doublon, corrections/exclusions et zone de gain.
+- [x] Prototype 5/8/10/15 km : trois tronçons routés orientés, budget commun, contrôle de fermeture, répétitions, longueur et déduplication, classement par nouvelles portions estimées. Worker préparé avec identifiant de requête ; intégration client encore absente.
+- [x] Mesures sur Lyon avec couverture vide et essai local sur la sauvegarde réelle ; aucun GPS personnel ni rapport personnalisé publié. Inspection visuelle locale de la forme d’une boucle et validation automatique des raccordements ; pas une recette de terrain.
+- [ ] Étendre la correspondance au score seulement avec preuves topologiques/géométriques : environ 65,6 % des kilomètres sont associés strictement, les axes représentatifs/trottoirs différents sont volontairement non transférés.
+- [ ] Prochaine livraison visible : empaqueter les données de routage avec provenance et chargement à la demande ; valider le point de départ sur le graphe sans liaison artificielle ; initialiser le Worker une fois, annulation et protection contre résultats périmés ; afficher les propositions, limites des estimations et budget atteint.
+- [ ] Export GPX et validation dans une application gratuite iPhone ; contrôler les parcours et mesurer sur appareil réel avant d’annoncer une navigation fiable.
+
+Le prototype est séparé de l’interface 1.8.0 et ne change pas le matching. La validation de chemins dans OSM et de leur géométrie ne certifie pas l’ouverture d’un passage sur le terrain.
