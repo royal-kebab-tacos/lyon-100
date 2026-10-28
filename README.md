@@ -237,3 +237,15 @@ Au premier démarrage de cette version, laissez l'application terminer le recalc
 Dans « À vérifier », les décalages déjà entièrement résolus par le calcul ne sont plus proposés. Les vraies ambiguïtés entre voies proches restent disponibles, sans obligation de les traiter.
 
 Cette version ne fusionne pas automatiquement deux chaussées parallèles d'une avenue ni un quai bas avec la rue au-dessus. Le GPS ne suffit pas toujours pour les distinguer. Le regroupement des représentations d'une même rue reste une amélioration séparée à tester ; cette marge ne garantit pas la correction de chaque trou visible sur les captures.
+
+## Nouveautés 1.7.0 : raccorder les petits trous
+
+La version 1.6.0 améliorait les décalages latéraux. La 1.7.0 traite un autre cas : un petit morceau manquant **entre deux passages déjà reconnus pendant la même sortie**.
+
+L'application peut reconnaître automatiquement le raccordement si un seul chemin réel et cohérent avec votre GPS relie les deux passages. La liaison est limitée à 40 mètres. Cela fonctionne aussi pour des chemins sans nom qui se suivent réellement. Deux chemins simplement proches ou plusieurs chemins possibles ne sont pas fusionnés automatiquement. Un changement de nom n’est accepté dans ce raccordement que si une traversée piétonne explicite relie réellement les voies.
+
+Les anciennes sorties sont recalculées au premier lancement ; laissez ce calcul se terminer. Aucun réimport nécessaire. Les corrections restent prioritaires, les anciennes sauvegardes sont acceptées. Utilisez la même version récente sur Mac et iPhone pour échanger vos sauvegardes.
+
+Cela ne garantit pas la disparition de tous les trous : une connexion absente du réseau ou une ambiguïté réelle peut rester visible. Les captures seules ne permettent pas de reconstituer les points GPS qui ont produit le résultat. L'onglet À vérifier reste facultatif.
+
+La 1.7.0 rétablit également les passages piétons publics nécessaires pour relier les rues. Ils étaient auparavant retirés des données de progression, ce qui pouvait laisser des trous même avec un GPS correct. Ils apparaissent en vert lorsqu'ils sont reconnus dans votre sortie, **sans ajouter des kilomètres à votre objectif**. Un cas identifié est la traversée d'environ 7,5 m à l'entrée du pont Gallieni.

@@ -12,7 +12,7 @@ const latlng=(coords:number[][])=>coords.map(p=>[p[1],p[0]] as L.LatLngTuple)
 const box=(bounds:L.LatLngBounds)=>({west:bounds.getWest(),east:bounds.getEast(),south:bounds.getSouth(),north:bounds.getNorth()})
 function NetworkLayer({network,coverage,excluded,district,filter,onSelect}:Props){
   const map=useMap()
-  const index=useMemo(()=>createViewportIndex(network.segments),[network])
+  const index=useMemo(()=>createViewportIndex([...network.segments,...(network.connectors||[])]),[network])
   const geometry=useMemo(()=>createRenderGeometry(coverage),[coverage])
   useEffect(()=>{
     const renderer=L.canvas({padding:.15}),group=L.layerGroup().addTo(map)
@@ -31,7 +31,7 @@ function NetworkLayer({network,coverage,excluded,district,filter,onSelect}:Props
       const bounds=L.latLngBounds(map.containerPointToLatLng(point.subtract([14,14])),map.containerPointToLatLng(point.add([14,14])))
       let best:Segment|undefined,distance=14
       for(const s of index.query(box(bounds))){
-        if(district&&s.district!==district)continue
+        if(s.connector||(district&&s.district!==district))continue
         const cs=latlng(s.coordinates).map(c=>map.latLngToContainerPoint(c))
         for(let i=1;i<cs.length;i++){const d=L.LineUtil.pointToSegmentDistance(point,cs[i-1],cs[i]);if(d<distance){distance=d;best=s}}
       }

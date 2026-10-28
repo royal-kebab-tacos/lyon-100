@@ -41,12 +41,12 @@ it('refuse une fraction non numérique dans une sauvegarde',async()=>{
  await expect(validateBackup(JSON.stringify(json),network,match)).rejects.toThrow(/incompatible/)
 })
 
-it('recalcule une sauvegarde matching 2.0 et conserve ses corrections',async()=>{
+it.each(['2.0.0','2.1.0'])('recalcule une sauvegarde matching %s et conserve ses corrections',async version=>{
  await add();await setCorrection('unit','remove',network,db)
- const json=JSON.parse(await exportBackup(network,db));json.matchingVersion='2.0.0'
- for(const a of json.activities){a.matchingVersion='2.0.0';a.coverage={};a.segmentIds=[];a.newMeters=0;a.newSegments=0}
+ const json=JSON.parse(await exportBackup(network,db));json.matchingVersion=version
+ for(const a of json.activities){a.matchingVersion=version;a.coverage={};a.segmentIds=[];a.newMeters=0;a.newSegments=0}
  const result=await validateBackup(JSON.stringify(json),network,match)
- expect(result.activities[0].matchingVersion).toBe('2.1.0');expect(result.activities[0].coverage).toEqual((await match(parsed.tracks)).coverage)
+ expect(result.activities[0].matchingVersion).toBe('2.2.0');expect(result.activities[0].coverage).toEqual((await match(parsed.tracks)).coverage)
  expect(result.corrections[0].action).toBe('remove');expect(result.activities[0].newMeters).toBeGreaterThan(0)
 })
 it('refuse une version future de matching au lieu de la recalculer implicitement',async()=>{

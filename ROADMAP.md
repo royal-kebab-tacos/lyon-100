@@ -106,3 +106,12 @@ Aucun flux officiel d'import GPX vers Plans iPhone n'a été confirmé dans cett
 - [ ] Recette sur les traces exactes des captures Avenue de Grande-Bretagne / Rue de la Madeleine : les captures seules ne donnent ni l'activité ni ses points GPS. La comparaison de l'ancienne sauvegarde n'est pas une preuve que ces deux cas sont corrigés.
 - [ ] Si le problème restant est la double représentation d'une même avenue : concevoir un regroupement de chaussées/trottoirs explicitement associés, avec métrique unique, géométrie cohérente et migration des corrections. Ne pas se contenter du nom ou de la proximité ; préserver quais, niveaux et voies indépendantes.
 - Les étapes exploration locale, graphe routable, prototype de boucles avec budget de calcul puis GPX restent prioritaires ensuite ; aucune promesse d'optimum global. Les autres demandes restent conservées.
+
+## Retour pont Gallieni / quai Gailleton — continuité
+
+- [x] 1.7.0 : raccordement court et unique dans le réseau existant, soutenu par la même trace, entre une approche et une sortie reconnues. Chemins sans nom pris en charge sans fusion globale par libellé.
+- [x] Tests de chemin alternatif, nom différent, niveaux, absence de connexion, décalage GPS, ancrages partiels et séparation des activités/pistes/temps. Recalcul et anciennes sauvegardes compatibles.
+- [ ] Reproduire les trous précis de la capture avec la sauvegarde actuelle correspondante. La sauvegarde historique disponible ne permet pas de certifier leur résolution. Examiner notamment les traversées techniques retirées du réseau et les transitions de nom/niveau. Ne pas augmenter la tolérance indéfiniment pour masquer une connexion OSM absente.
+- Le regroupement des chaussées, l'exploration locale et le prototype de parcours restent conservés avec leurs dépendances.
+
+- [x] Cause identifiée à l'entrée du pont Gallieni : traversée OSM 1304453497 exclue comme objet technique. Préparation séparée de liaisons publiques, utilisation pour les raccordements et dessin de leur couverture, hors statistiques et objectif. Sur la sauvegarde historique, la traversée est reconnue intégralement ; cela ne certifie pas tous les trous du quai de la capture.

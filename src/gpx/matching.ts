@@ -1,5 +1,6 @@
 import type { Coordinate, Coverage, Interval, MatchResult, Segment, TrackPoint } from '../types'
 import { GPS_TOLERANCE_METERS as TOL, SAMPLE_INTERVAL_METERS as STEP, MAX_HEADING_DIFFERENCE_DEGREES, WIDE_STREET_TOLERANCE_METERS as WIDE, WIDE_STREET_MIN_FOLLOW_METERS as MIN_FOLLOW, WIDE_STREET_HEADING_DEGREES, WIDE_STREET_COMPETITOR_MARGIN_METERS as MARGIN } from '../utils/config'
+import { bridgeGap } from './continuity'
 import { mergeIntervals } from '../stats/progress'
 // Local metric projection centred on Lyon (spherical radius used by Turf).
 // Length accounting always uses the geodesic length stored in the network.
@@ -13,7 +14,7 @@ interface Road {segment:Segment; points:Coordinate[]; cumulative:number[]; lengt
 interface Candidate {road:number;t:number;distance:number;heading:number;direction:Coordinate}
 interface Piece {road:number;range:Interval}
 interface Route {length:number;pieces:Piece[];wide?:boolean}
-interface State {candidate:Candidate;score:number;previous?:State;route?:Route}
+interface State {index:number;candidate:Candidate;score:number;previous?:State;route?:Route}
 function observations(track:TrackPoint[]):Coordinate[] {
   if(track.length<2)return []
   const result:Coordinate[]=[xy(track[0].coordinates)]
@@ -62,7 +63,7 @@ export function createNetworkMatcher(segments:Segment[]) {
     for(let x=cx-1;x<=cx+1;x++)for(let y=cy-1;y<=cy+1;y++)for(const i of grid.get(`${x},${y}`)||[])indexes.add(i)
     const result:Candidate[]=[],dx=after[0]-before[0],dy=after[1]-before[1],norm=Math.hypot(dx,dy)
     for(const road of indexes){
-      const r=roads[road];let best:Candidate|undefined
+      const r=roads[road];if(r.segment.connector)continue;let best:Candidate|undefined
       for(let i=1;i<r.points.length;i++){
         const a=r.points[i-1],b=r.points[i],q=project(p,a,b),length=dist(a,b)
         const similarity=norm&&length?Math.abs(dx*(b[0]-a[0])+dy*(b[1]-a[1]))/(norm*length):1
@@ -103,6 +104,7 @@ export function createNetworkMatcher(segments:Segment[]) {
       for(const edge of adj.get(current.node)||[]){
         if(edge.road===a.road||edge.road===b.road)continue
         const r=roads[edge.road]
+        if(r.segment.connector)continue // Used only by the anchored continuity pass.
         // No invented shortcut through a remote parallel street or park detour.
         const first=r.points[0],last=r.points.at(-1)!,span=dist(first,last)
         if(wide&&(!span||!sameCorridor(a,{...a,road:edge.road,direction:[(last[0]-first[0])/span,(last[1]-first[1])/span]})))continue
@@ -114,26 +116,32 @@ export function createNetworkMatcher(segments:Segment[]) {
   }
   return (tracks:TrackPoint[][],onProgress?:(done:number)=>void):MatchResult=>{
     const coverage:Coverage={};let done=0
+    let anchors=new Map<number,Candidate>(),linked=new Set<number>()
     const total=tracks.reduce((sum,t)=>sum+t.length,0)
     const commit=(states:State[])=>{
       let state:State|undefined=states.reduce<State|undefined>((best,s)=>!best||s.score<best.score?s:best,undefined)
       const addPieces=(pieces:Piece[])=>{for(const piece of pieces){const id=roads[piece.road].segment.id;coverage[id]=mergeIntervals([...(coverage[id]||[]),piece.range])}}
-      let pending:Piece[]=[]
+      const remember=(s:State)=>{if(s.previous&&s.route){anchors.set(s.index,s.candidate);anchors.set(s.previous.index,s.previous.candidate);linked.add(s.index)}}
+      let pending:Piece[]=[],pendingStates:State[]=[]
       const flush=()=>{
         const unique=new Map<number,Interval[]>()
         for(const piece of pending)unique.set(piece.road,mergeIntervals([...(unique.get(piece.road)||[]),piece.range]))
         const meters=[...unique].reduce((sum,[id,ranges])=>sum+ranges.reduce((n,[a,b])=>n+b-a,0)*roads[id].length,0)
-        if(meters>=MIN_FOLLOW-1e-6)addPieces(pending)
-        pending=[]
+        if(meters>=MIN_FOLLOW-1e-6){addPieces(pending);pendingStates.forEach(remember)}
+        pending=[];pendingStates=[]
       }
       while(state){
-        if(state.route?.wide)pending.push(...state.route.pieces)
-        else {flush();addPieces(state.route?.pieces||[])}
+        if(state.route?.wide){pending.push(...state.route.pieces);pendingStates.push(state)}
+        else {flush();addPieces(state.route?.pieces||[]);remember(state)}
         state=state.previous
       }
       flush()
     }
-    for(const track of tracks){
+    // Preserve discontinuities even when callers bypass the file parser.
+    const continuous:TrackPoint[][]=[]
+    for(const track of tracks){let part:TrackPoint[]=[];for(const p of track){const prev=part.at(-1),seconds=prev?.time&&p.time?(Date.parse(p.time)-Date.parse(prev.time))/1000:0;if(prev&&(dist(xy(prev.coordinates),xy(p.coordinates))>200||seconds>120||seconds<0)){if(part.length>1)continuous.push(part);part=[]}part.push(p)}if(part.length>1)continuous.push(part)}
+    for(const track of continuous){
+      anchors=new Map();linked=new Set()
       const obs=observations(track);let states:State[]=[],wideMode=false
       for(let i=0;i<obs.length;i++){
         const cs=candidates(obs[i],obs[Math.max(0,i-1)],obs[Math.min(obs.length-1,i+1)])
@@ -147,15 +155,24 @@ export function createNetworkMatcher(segments:Segment[]) {
           for(const prev of states){
             const path=route(prev.candidate,c,obs[i-1],obs[i]);if(!path)continue
             const score=prev.score+c.distance+4*c.heading+0.8*Math.abs(path.length-dist(obs[i-1],obs[i]))
-            if(!best||score<best.score)best={candidate:c,score,previous:prev,route:path}
+            if(!best||score<best.score)best={index:i,candidate:c,score,previous:prev,route:path}
           }
           if(best)next.push(best)
         }
-        if(!next.length){commit(states);next=cs.map(candidate=>({candidate,score:candidate.distance+4*candidate.heading}))}
+        if(!next.length){commit(states);next=cs.map(candidate=>({index:i,candidate,score:candidate.distance+4*candidate.heading}))}
         states=next
         if(i%100===0)onProgress?.(Math.round(100*(done+(obs.length?i/obs.length:0)*track.length)/Math.max(1,total)))
       }
-      commit(states);done+=track.length
+      commit(states)
+      const ordered=[...anchors].sort((a,b)=>a[0]-b[0])
+      for(let k=1;k<ordered.length;k++){
+        const [before,a]=ordered[k-1],[after,b]=ordered[k]
+        // Require a recognised approach and departure in this same trace, not
+        // merely two isolated snaps. Never connect across track/time gaps.
+        if(linked.has(after)||!linked.has(before)||!linked.has(after+1)||!anchors.has(after+1)||after-before>10)continue
+        for(const piece of bridgeGap(roads,adj,a,b,obs.slice(before,after+1))){const id=roads[piece.road].segment.id;coverage[id]=mergeIntervals([...(coverage[id]||[]),piece.range])}
+      }
+      done+=track.length
     }
     for(const id of Object.keys(coverage))if(!coverage[id].length)delete coverage[id]
     onProgress?.(100)

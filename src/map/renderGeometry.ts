@@ -13,6 +13,7 @@ export function createRenderGeometry(coverage:Coverage){
   if(previous&&previous.excluded===excluded&&previous.district===district&&previous.filter===filter&&previous.segments.length===segments.length&&segments.every((s,i)=>s===previous!.segments[i]))return previous.layers
   const layers:{remaining:Coordinate[][];done:Coordinate[][];outside:Coordinate[][];removed:Coordinate[][]}={remaining:[],done:[],outside:[],removed:[]}
   for(const s of segments){
+   if(s.connector&&!coverage[s.id]?.length)continue
    if(district&&s.district!==district){layers.outside.push(s.coordinates);continue}
    if(excluded.has(s.id)){layers.removed.push(s.coordinates);continue}
    let pieces=cache.get(s.id)
@@ -23,7 +24,7 @@ export function createRenderGeometry(coverage:Coverage){
     pieces={done:ranges.map(range=>part(s,range)),remaining};cache.set(s.id,pieces)
    }
    if(filter!=='Restantes')layers.done.push(...pieces.done)
-   if(filter!=='Parcourues')layers.remaining.push(...pieces.remaining)
+   if(filter!=='Parcourues'&&!s.connector)layers.remaining.push(...pieces.remaining)
   }
   const merged={remaining:stitchPaths(layers.remaining),done:stitchPaths(layers.done),outside:stitchPaths(layers.outside),removed:stitchPaths(layers.removed)}
   previous={segments,excluded,district,filter,layers:merged};return merged

@@ -43,3 +43,5 @@ public/data/.*
 /public/data/lyon-network.json
 /data/lyon-source.json.gz
 .openai/
+
+/public/data/lyon-connectors.json

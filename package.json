@@ -1,22 +1,22 @@
 {
   "name": "lyon-100",
   "private": true,
-  "version": "1.6.0",
+  "version": "1.7.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "prepare": "node --use-env-proxy --import tsx scripts/prepare.ts",
+    "prepare": "node --use-env-proxy --import tsx scripts/prepare.ts && node --import tsx scripts/prepare-connectors.ts",
     "test": "vitest run",
     "typecheck": "tsc -b",
     "check": "npm run test && npm run lint && npm run build",
     "benchmark": "node --import tsx scripts/benchmark.ts",
-    "postinstall": "node scripts/restore-data.mjs",
-    "predev": "node scripts/restore-data.mjs",
-    "pretest": "node scripts/restore-data.mjs",
-    "prebuild": "node scripts/restore-data.mjs"
+    "postinstall": "node scripts/restore-data.mjs && node --import tsx scripts/prepare-connectors.ts",
+    "predev": "node scripts/restore-data.mjs && node --import tsx scripts/prepare-connectors.ts",
+    "pretest": "node scripts/restore-data.mjs && node --import tsx scripts/prepare-connectors.ts",
+    "prebuild": "node scripts/restore-data.mjs && node --import tsx scripts/prepare-connectors.ts"
   },
   "dependencies": {
     "@noble/hashes": "^2.4.0",

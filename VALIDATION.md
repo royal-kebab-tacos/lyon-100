@@ -171,3 +171,25 @@ Recette visuelle Mac/iPhone en attente. Le navigateur local n’était pas dispo
 6. Fermer/réouvrir après le recalcul : pas de recalcul répété. Tester carte, filtres et zoom.
 
 Recette visuelle réelle non effectuée dans cet environnement. Les deux captures fournies ne suffisent pas à certifier un résultat de matching sans leurs traces correspondantes.
+
+## Lot 1.7.0 — continuité et traversées piétonnes
+
+- Linter, TypeScript et build de production réussis. 29 entrées dans le pré-cache, dont les liaisons publiques. Avertissements non bloquants Vite/configuration native et taille du bundle conservés.
+
+- 149 tests réussis : raccordement entre ancrages, fraction partielle, chemins sans nom, noms différents, chemin alternatif même sous un autre nom, niveaux, connexion absente, détour GPS, limite de 40 m, séparation activités/pistes/temps, restauration des sauvegardes 2.0.0 et 2.1.0.
+- Liaisons : traversées publiques autorisées, accès privés/interdits exclus, IDs distincts, couverture dessinée sans objectif gris ni ajout aux kilomètres/statistiques, sauvegarde/restauration et refus de corrections sur une liaison.
+- Source OSM archivée : passage 1304453497, retiré auparavant par le filtre crossing. La préparation le rétablit comme liaison hors score. 20 478 unités de liaison pour Lyon, fichier public généré automatiquement depuis la source déjà livrée et pré-caché. Le réseau des rues et son dénominateur ne changent pas.
+- Comparaison finale sur 81 anciennes activités réelles : 107 517,04 → 108 099,48 m uniques (+582,45 m), aucune perte de longueur par activité. Environ 14,4 s pour comparer les deux moteurs sur le runtime local ; ce n'est pas une mesure iPhone. Dans la zone Gallieni/Gailleton : +4,83 m éligibles et 7,53 m de passage piéton reconnus pour le dessin hors score. Aucun GPS personnel ni résultat détaillé ajouté au dépôt.
+- Les résultats n'établissent pas que tous les trous de la capture sont corrigés : certains cheminements diffèrent, d'autres connexions peuvent encore manquer. Comparer la sauvegarde actuelle à la trace pour conclure sur chaque cas.
+
+### Recette Mac puis iPhone
+
+1. Vérifier 1.7.0, laisser terminer le recalcul sans réimport. Même nombre d'activités, corrections conservées, même total éligible ; vérifier les éventuels gains automatiques.
+2. Comparer l'entrée ouest du pont Gallieni et sa traversée à la trace de la sortie. Le passage peut être dessiné en vert sans être un nouvel objectif à corriger.
+3. Vérifier un petit trou sur une même voie, une rue parallèle distincte, deux chemins possibles et un quai à un autre niveau. Aucun trait droit inventé entre voies non connectées.
+4. Vérifier deux activités distinctes de part et d'autre d'un trou : elles ne doivent pas déclencher un raccordement entre elles.
+5. Vérifier les filtres : aucune liaison technique non parcourue ajoutée à « Restantes ». Les fractions restent fidèles.
+6. Exporter/restaurer sur une copie et transférer vers un autre appareil également à jour ; activités, corrections et liaisons reconnues conservées.
+7. Après chargement complet, ouvrir hors ligne : données de liaisons disponibles comme le réseau. Tester fluidité et zoom sur iPhone.
+
+Recette visuelle Safari/iPhone non effectuée dans cet environnement ; les tests jsdom et les calculs locaux ne la remplacent pas.

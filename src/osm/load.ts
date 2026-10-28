@@ -10,6 +10,9 @@ export async function loadNetwork(): Promise<Network> {
     ? await loadNetworkParts()
     : await fetchData('data/lyon-network.json')
   if (n.schemaVersion !== 1 || typeof n.version !== 'string' || !n.sourceHash || !n.boundary || !Array.isArray(n.segments) || !n.segments.length || n.segments.some(s => !s.id || !Number.isFinite(s.lengthMeters) || s.lengthMeters <= 0 || s.lengthMeters > 10.05 || s.coordinates.length < 2 || !s.coordinates.every(validCoordinate)) || new Set(n.segments.map(s => s.id)).size !== n.segments.length || Math.abs(n.segments.reduce((sum, s) => sum + s.lengthMeters, 0) - n.totalMeters) > 0.01) throw new Error('Le réseau des rues est incomplet. Préparez à nouveau les données OSM avant de continuer.')
+  const links=await fetchData('data/lyon-connectors.json')
+  if(links.networkVersion!==n.version||links.sourceHash!==n.sourceHash||links.rules!==1||!Array.isArray(links.connectors)||links.connectors.some((s:Network['segments'][number])=>!s.connector||!s.id?.startsWith('connector:')||!Number.isFinite(s.lengthMeters)||s.lengthMeters<=0||s.lengthMeters>10.05||!Array.isArray(s.coordinates)||s.coordinates.length<2||!s.coordinates.every(validCoordinate))||new Set(links.connectors.map((s:Network['segments'][number])=>s.id)).size!==links.connectors.length)throw new Error('Les liaisons de la carte sont incomplètes. Rechargez Lyon 100.')
+  n.connectors=links.connectors
   return n
 }
 

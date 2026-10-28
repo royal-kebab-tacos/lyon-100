@@ -23,7 +23,7 @@ export async function validateBackup(text: string, network: Network, match: (tra
   if (!record(payload) || payload.format !== 'lyon-100-backup' || ![1,2].includes(payload.schemaVersion as number) || !date(payload.exportedAt) || !Array.isArray(payload.activities)) throw invalid()
   const legacyV1=payload.schemaVersion===1 && payload.matchingVersion==='1.0.0'
   const previousNetwork=payload.schemaVersion===2 && payload.networkVersion==='lyon-v2-4615266167e59389' && payload.matchingVersion==='2.0.0' && payload.sourceHash===network.sourceHash
-  const previousMatching=payload.schemaVersion===2 && payload.networkVersion===network.version && payload.sourceHash===network.sourceHash && payload.matchingVersion==='2.0.0'
+  const previousMatching=payload.schemaVersion===2 && payload.networkVersion===network.version && payload.sourceHash===network.sourceHash && ['2.0.0','2.1.0'].includes(payload.matchingVersion as string)
   const legacy=legacyV1 || (previousNetwork && payload.networkVersion!==network.version) || previousMatching
   if(!legacy && (payload.schemaVersion!==2 || payload.networkVersion!==network.version || payload.sourceHash!==network.sourceHash || payload.matchingVersion!==MATCHING_VERSION))throw invalid()
   const corrections:Correction[]=[]
@@ -36,7 +36,7 @@ export async function validateBackup(text: string, network: Network, match: (tra
     }
   }
   const ids = new Set<string>(), rawHashes = new Set<string>(), contentHashes = new Set<string>()
-  const eligible = new Set(network.segments.map(s => s.id))
+  const eligible = new Set([...network.segments,...(network.connectors||[])].map(s => s.id))
   let count = 0
   const result: Activity[] = []
   for (const input of payload.activities) {

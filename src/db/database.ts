@@ -24,7 +24,7 @@ export async function recalculateActivities(activities:Activity[],network:Networ
   }
   return output
 }
-export async function ensureNetwork(network:Network,database=db,match=(tracks:TrackPoint[][])=>Promise.resolve(matchSegments(network.segments,tracks))) {
+export async function ensureNetwork(network:Network,database=db,match=(tracks:TrackPoint[][])=>Promise.resolve(matchSegments([...network.segments,...(network.connectors||[])],tracks))) {
   const original=await database.activities.toArray(),corrections=await database.corrections.toArray()
   const migrate=original.some(a=>a.networkVersion!==network.version||a.matchingVersion!==MATCHING_VERSION||!a.coverage)
   const eligible=new Set(network.segments.map(s=>s.id))
