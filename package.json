@@ -16,7 +16,9 @@
     "postinstall": "node scripts/restore-data.mjs && node --import tsx scripts/prepare-connectors.ts",
     "predev": "node scripts/restore-data.mjs && node --import tsx scripts/prepare-connectors.ts",
     "pretest": "node scripts/restore-data.mjs && node --import tsx scripts/prepare-connectors.ts",
-    "prebuild": "node scripts/restore-data.mjs && node --import tsx scripts/prepare-connectors.ts"
+    "prebuild": "node scripts/restore-data.mjs && node --import tsx scripts/prepare-connectors.ts",
+    "routing:prepare": "node --import tsx scripts/prepare-routing.ts",
+    "routing:benchmark": "node --import tsx scripts/benchmark-routing.ts"
   },
   "dependencies": {
     "@noble/hashes": "^2.4.0",

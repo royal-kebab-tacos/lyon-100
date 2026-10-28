@@ -1,0 +1,44 @@
+{
+  "purpose": "routing foundations; not field navigation validation",
+  "sourceDate": "2026-10-24T00:00:00Z",
+  "pbfSha256": "58a3ce52b19ade2abde857eee0e92a176ab20eaddb8df3e8d0089a959cc12e19",
+  "sourceHash": "a33f821bf432a7c60ebaac687943f9bff0b57d726321243de549bcfdd0beb7a8",
+  "nodes": 53353,
+  "edges": 65630,
+  "audit": {
+    "missing": [],
+    "excludedWays": 63288,
+    "blockedNodes": 32911,
+    "restrictedWays": 0,
+    "boundaryEdgesOmitted": 81543,
+    "components": 727,
+    "largestComponentNodes": 48811,
+    "rawEdges": 114484
+  },
+  "buildMs": 71035,
+  "searchIndexMs": 136,
+  "searches": [
+    {
+      "milliseconds": 10,
+      "meters": 1063,
+      "visited": 4038
+    },
+    {
+      "milliseconds": 11,
+      "meters": 1353,
+      "visited": 7063
+    },
+    {
+      "milliseconds": 16,
+      "meters": 1728,
+      "visited": 10632
+    }
+  ],
+  "limitations": [
+    "No field validation",
+    "Not measured on iPhone",
+    "Not a loop optimizer",
+    "Disconnected components are retained",
+    "Not included in the app bundle"
+  ]
+}

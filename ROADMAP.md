@@ -126,3 +126,16 @@ Arthur demande de passer aux autres mises à jour dans l’ordre. Les trous/trot
 3. [ ] Préparer le graphe piéton séparé, restrictions et connexions réelles ; proposer des points de départ accessibles seulement après cette vérification. Le premier lot ne garantit aucun accès à pied.
 4. [ ] Prototype de boucles avec budget de calcul et mesures de qualité/performance avant interface complète, puis export GPX et essai gratuit sur iPhone.
 5. [ ] Strava automatique, FIT/ZIP, sauvegarde cloud et autres demandes conservées.
+
+## Fondations de routage — reprise après validation du point
+
+- Arthur confirme que le choix du point fonctionne sur son appareil. Cela ne vaut pas validation de toutes les autres interactions de la 1.8.0.
+- [x] Extraction indépendante des chemins, tags de nœuds et relations depuis un PBF complet ; écriture atomique, date source et SHA-256 du PBF. L’ancien PBF local s’est révélé tronqué ; nouveau téléchargement dédié, sans remplacer le réseau de score.
+- [x] Graphe de topologie séparé : trottoirs/traversées conservés, identifiants OSM exacts, points de géométrie compressés entre jonctions, directions piétonnes, blocages et audit des composantes.
+- [x] Plus court chemin borné, tas de priorité, annulation et diagnostics d’échec. L’archive historique incomplète ne peut pas servir au mode `route`.
+- [ ] Recette de trajets réels : départ, pont/quai, traversées, impasses et passages fermés. Le profil conservateur peut exclure un itinéraire valide ; les composantes ne sont pas fusionnées pour forcer un résultat.
+- [ ] Rapprocher le réseau routable et les fractions du score, sans créditer de gain par simple proximité ; les snapshots ont des dates distinctes.
+- [ ] Prototype de boucles : budget commun à la génération entière, Worker, longueur souhaitée, gain unique et répétitions, puis mesures sur iPhone.
+- [ ] Interface de propositions et export GPX après ces contrôles ; essai dans une application iPhone gratuite.
+
+Ce lot est technique : pas de changement visuel ni d’activation de navigation, application toujours 1.8.0. Les demandes différées (trottoirs, Strava, FIT/ZIP, cloud) restent conservées.

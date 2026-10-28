@@ -256,3 +256,18 @@ La 1.7.0 rétablit également les passages piétons publics nécessaires pour re
 Dans Carte, utilisez **Autour d’un point → Choisir sur la carte**, puis touchez un lieu. Un cercle indique le rayon choisi : 250 m, 500 m, 1 km ou 2 km. Le panneau affiche les kilomètres encore à découvrir dans ce cercle, le nombre de noms de rues concernés et les dix plus proches. **Voir** zoome sur une portion locale de la rue. Les voies sans nom sont comptées séparément dans les mètres. Le filtre d’arrondissement et vos corrections s’appliquent.
 
 Les distances sont à vol d’oiseau, pas des itinéraires à pied. La liste inclut les petits restes de rues au statut « Terminée ». Le point n’est pas enregistré dans les sauvegardes et disparaît en quittant la carte. Vous pouvez le déplacer, annuler le choix ou l’effacer. Aucun réimport ou recalcul des activités n’est requis. Les boucles et l’export GPX viendront après la validation d’un réseau piéton routable.
+
+## Préparation des parcours : lot technique après 1.8.0
+
+Le placement du point reste disponible. Ce lot prépare le moteur de chemins, sans ajouter encore de bouton de génération et sans changer le numéro 1.8.0 de l’interface. Les activités, le réseau de progression et les sauvegardes restent indépendants du routage.
+
+Pour travailler sur le moteur (développement uniquement) :
+
+1. Télécharger l’extrait public `https://download.bbbike.org/osm/bbbike/Lyon/Lyon.osm.pbf` dans `.osm-cache/routing-source.osm.pbf`. Le téléchargement est manuel et séparé de l’installation/build de l’application.
+2. Installer Python et pyosmium dans un environnement de préparation (`python3 -m pip install osmium`).
+3. Exécuter `python3 scripts/extract-routing-pbf.py .osm-cache/routing-source.osm.pbf .osm-cache/routing-source.json.gz`.
+4. Exécuter `npm run routing:prepare -- .osm-cache/routing-source.json.gz`, puis `npm run routing:benchmark`.
+
+Les fichiers générés sont dans `.osm-cache/`, pas dans le site ni dans les sauvegardes. L’extracteur refuse un PBF incomplet avant de remplacer une archive existante. L’ancien fichier du score peut servir à mesurer la topologie via `npm run routing:prepare`, mais son absence de tags de nœuds/restrictions interdit l’usage normal du moteur de routage. Les mesures de benchmark ne sont pas des consignes de navigation.
+
+Références du profil OSM : [accès](https://wiki.openstreetmap.org/wiki/Key:access), [sens piétons](https://wiki.openstreetmap.org/wiki/Key:oneway:foot), [barrières](https://wiki.openstreetmap.org/wiki/Barriers). Les règles retenues sont volontairement conservatrices, sans garantie d’exhaustivité ni d’accessibilité réelle.
