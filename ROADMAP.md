@@ -41,11 +41,11 @@ Révision : 28 octobre 2026. Les invariants durables sont dans AGENTS.md. `[x]` 
 - [ ] Recette visuelle Safari/iPhone du mode sombre et du changement de thème système.
 - Import direct d’une archive ZIP Strava, traitement local borné, réutilisation des parseurs normalisés et de l’antidoublon. Dépend du support FIT si l’archive en contient.
 
-## V2 — Strava automatique
+## Chantier ultérieur — Strava automatique
 
 Connexion au compte personnel : course sur Strava → réception automatique → normalisation → matching → progression. OAuth, secrets et récupération automatique exigent une conception backend dédiée, seulement à cette étape. Réutiliser `NormalizedActivity`, ne pas ajouter maintenant comptes internes, profils ou architecture multi-utilisateur.
 
-## V3 — générateur de parcours
+## Prochaine priorité fonctionnelle — générateur de parcours
 
 Boucles humaines et agréables de 5/8/10/15 km, point de départ et arrondissement cible, maximisant les nouvelles voies sans détours absurdes pour quelques mètres. Export GPX. Dépend d’une couverture fiable et d’un graphe de cheminements réellement routable, avec sens/accès/barrières et préférences de confort ; le graphe simplifié du matching ne suffit pas à promettre un itinéraire praticable.
 
@@ -68,8 +68,8 @@ Les sections 1 à 7 du prompt sont déjà couvertes par la V1 : géographie, tro
 2. **Historique temporel et évolution récente — livré en 1.3.0** (sections 11 et fin de 13). Les dates d’activité/import et couvertures permettent déjà de reconstruire des unions cumulées, sans nouveau matching. Recalculer par date de sortie, avec importedAt comme repli explicite pour les sorties sans date ; semaines ISO et mois selon Europe/Paris. Supprimer une sortie réécrit l’historique reconstruit. Une correction possède seulement son dernier updatedAt : impossible de reconstituer honnêtement ses anciennes valeurs ou les corrections effacées. Choix : montrer d’abord un historique automatique des sorties, clairement distinct de la progression actuelle corrigée. Si l’historique exact des corrections devient nécessaire, ajouter un journal versionné et l’inclure dans la sauvegarde ; ne pas inventer le passé. Le réseau et le dénominateur courants servent de référence fixe, documentée. Calcul incrémental dans un Worker pour éviter activités × réseau × dates sur le thread principal. Tests : import désordonné, doublon spatial, suppression partagée, date manquante, frontières semaine/mois et corrections.
 3. **Segments à vérifier facultatifs — premier lot livré en 1.4.0** (section 8). Le diagnostic géométrique séparé traite deux signaux bornés et explicables, sans toucher au matcher ni exiger de recalcul des activités. Suggestions dérivées à la demande, version du diagnostic dans les choix ignorés. Les corrections existantes portent les validations/refus ; settings porte les ignorés. Aucun changement de schéma IndexedDB nécessaire. Sauvegarde v2 étendue par un champ optionnel validé ; absence du champ acceptée. Tests de restauration/rollback/suppression et continuité inclus. Les motifs plus complexes (petits trous, connectivité) restent à développer avec des cas concrets.
 4. **Confort local et hors-ligne** : filtres avancés et amélioration d’état hors connexion après mesures réelles. Pas de cache massif de tuiles. Le compteur « X rues restantes ici » reste pour plus tard, conformément au prompt.
-5. **Strava V2** (section 16) : stockage serveur sécurisé des jetons, OAuth et mécanisme d’acquisition automatique ; identifiant d’activité fournisseur en plus des hashes de traces pour éviter les doublons entre import manuel et récupération. Un seul propriétaire, aucun compte interne multi-utilisateur.
-6. **Parcours V3** (section 10) : données de routage enrichies avec accès piétons, barrières et connectivité réelle ; boucles 5/8/10/15 km, départ/cible, export GPX. Ne pas réutiliser sans validation le graphe simplifié du matching. La génération devra rester indépendante de la couverture enregistrée et ne jamais créditer une route simplement proposée.
+6. **Strava automatique, après les parcours** (section 16) : stockage serveur sécurisé des jetons, OAuth et mécanisme d’acquisition automatique ; identifiant d’activité fournisseur en plus des hashes de traces pour éviter les doublons entre import manuel et récupération. Un seul propriétaire, aucun compte interne multi-utilisateur.
+5. **Parcours, avant Strava automatique** (section 10) : données de routage enrichies avec accès piétons, barrières et connectivité réelle ; boucles 5/8/10/15 km, départ/cible, export GPX. Ne pas réutiliser sans validation le graphe simplifié du matching. La génération devra rester indépendante de la couverture enregistrée et ne jamais créditer une route simplement proposée.
 
 Les demandes de sauvegarde cloud, envoi vers Strava après un éventuel enregistrement, image partageable et compteur local restent listées dans « Plus tard ». Aucun besoin actuel de refondre NormalizedActivity, les intervalles de couverture ou les corrections. Les évolutions de modèle ci-dessus seront réalisées avec leurs fonctionnalités, tests de migration et sauvegardes compatibles, pas préventivement.
 
@@ -78,3 +78,23 @@ Les demandes de sauvegarde cloud, envoi vers Strava après un éventuel enregist
 - 28 octobre : Arthur confirme le fonctionnement de la 1.2.0, son numéro de version et le mode sombre. Cela ne valide pas automatiquement tous les cas de la checklist hors-ligne et système.
 - 28 octobre : Arthur confirme aussi le bon fonctionnement du lot 1.3.0.
 - Suite après recette 1.4.0 : confort de recherche/tri des rues et exploration ; approfondir les diagnostics selon les erreurs réellement observées. Strava et parcours restent des chantiers distincts nécessitant les dépendances indiquées plus haut.
+
+## Priorités actualisées après le retour sur iPhone 14
+
+Cet ordre remplace celui de l'audit historique ci-dessus. Les demandes non cochées restent à faire.
+
+1. [x] **1.5.0 : carte et accès au diagnostic.** Index spatial, rendu limité à la vue avec marge, géométries partielles en cache, regroupement exact des lignes, sélection indépendante ; onglet « À vérifier ». Aucun changement des kilomètres, du réseau, du matching ou du format de sauvegarde.
+2. [ ] **Recette iPhone 14.** Comparer zoom/déplacement, filtres et sélection avec les mêmes données ; traiter les régressions avant d'ajouter du routage. Mesurer séparément premier chargement, dessin des rues et arrivée du fond cartographique.
+3. [ ] **Exploration locale.** Point de référence choisi sur la carte (inutile d'exiger l'adresse exacte du domicile), distance de proximité et rues restantes autour de ce point ; proposer des départs publics accessibles, expliquer distance d'accès et intérêt. Le compteur local est avancé ici car utile aux parcours.
+4. [ ] **Réseau routable.** Préparer séparément les cheminements piétons, connexions, niveaux pont/tunnel, barrières et restrictions. Les axes représentatifs foot=use_sidepath du score ne sont pas des consignes de navigation sur la chaussée. Tester les jonctions et les impasses ; ne pas inventer une liaison pour atteindre une rue.
+5. [ ] **Boucles locales puis GPX.** Départ sélectionné/proposé, longueurs 5/8/10/15 km, option arrondissement ; favoriser les mètres non parcourus, borner répétitions/détours, proposer moins d'options si aucun résultat raisonnable. Prévisualiser distance, nouvelles rues estimées et GPX ; départ/retour connectés, format GPX valide, aucune modification de progression avant import d'une activité réellement effectuée.
+6. [ ] **Compatibilité téléphone.** Tester un GPX exporté dans une application gratuite adaptée. Strava documente l'import GPX via son créateur d'itinéraires web, dont l'accès exige un abonnement : ne pas promettre l'import personnel gratuit dans Strava mobile. Les liens Google Maps/Plans peuvent aider à rejoindre le départ ; ils ne garantissent pas le suivi exact d'une boucle GPX.
+7. [ ] **Puis autres demandes.** Strava automatique, FIT/ZIP, sauvegarde cloud, image partageable et diagnostics plus avancés restent conservés ; les reprendre selon les dépendances et les cas réels.
+
+Sources officielles consultées pour la préparation :
+- Strava, import GPX : https://support.strava.com/fr/articles/15402061-comment-creer-un-itineraire-a-partir-d-un-fichier-gpx
+- Strava, création web et abonnement : https://support.strava.com/fr/articles/15401971-comment-creer-et-gerer-des-itineraires-sur-le-site-web-de-strava
+- Google Maps, liens et limites de points intermédiaires : https://developers.google.com/maps/documentation/urls/get-started
+- Apple Plans, parcours à pied créés manuellement : https://support.apple.com/en-mide/guide/iphone/iph3d7ebd491/27/ios/27
+
+Aucun flux officiel d'import GPX vers Plans iPhone n'a été confirmé dans cette recherche. Vérifier la compatibilité réelle à la livraison du générateur ; ne pas confondre ouvrir le point de départ, afficher une trace et être guidé sur cette trace.

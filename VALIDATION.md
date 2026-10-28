@@ -131,3 +131,22 @@ Cette liste reste à valider sur les appareils réels ; le passage des tests aut
 10. Vérifier mode clair/sombre, boutons sur iPhone et analyse hors ligne après téléchargement complet. Tester une vraie sortie longue ; aucune performance iPhone n’est affirmée avant cette recette.
 
 Recette visuelle Mac/iPhone en attente. Le navigateur local n’était pas disponible pour la validation précédente ; cette livraison ne prétend pas remplacer les essais sur appareils réels.
+
+## Lot 1.5.0 — carte et navigation
+
+- Tests, lint, TypeScript et build de production réussis. Avertissements de build non bloquants : taille du bundle et configuration native Vite.
+- 110 tests automatisés : sept nouveaux cas sur index spatial, portions traversant la vue, déduplication, jonctions/boucles, conservation des fractions et séparation des styles.
+- Mesure locale sur le réseau réel : 4 403 unités intersectent une vue autour de Guillotière (4.828–4.842 E, 45.748–45.758 N), contre 127 122 dans Lyon. C'est une réduction de charge, pas une mesure de fluidité sur iPhone.
+- Aucun changement du réseau, matching, stockage ou sauvegarde. Pas de nouvelle dépendance.
+- Recette visuelle navigateur et iPhone encore à effectuer : aucun navigateur local utilisable n'a permis de la certifier.
+
+### Tests manuels Mac puis iPhone 14
+
+1. Vérifier 1.5.0, mêmes activités et kilomètres ; ne pas effacer le stockage.
+2. Dans Carte : zoom progressif Lyon → quartier → rue, déplacement rapide dans chaque direction, retour Lyon. Les rues de la nouvelle vue doivent réapparaître après le geste, sans rester manquantes.
+3. Tester Toutes/Restantes/Parcourues, un arrondissement puis Lyon ; mêmes fractions vertes et grises, aucune jonction inventée.
+4. Sélectionner plusieurs portions, ouvrir une rue depuis la liste et comparer au GPS : sélection bleue et bonne trace orange, zoom correct.
+5. Ouvrir À vérifier depuis la navigation puis depuis une activité : bonne sortie, analyse, comparaison, confirmations et ignorer/réafficher fonctionnent. Revenir de la carte à À vérifier conserve la sortie choisie.
+6. Vérifier les cinq onglets en portrait/paysage et en clair/sombre, aucun bouton masqué.
+7. Après chargement complet, tester hors connexion : rues et données consultables, fond éventuellement absent.
+8. Comparer le ressenti des déplacements avec/sans fond cartographique pour distinguer le dessin des rues et le téléchargement des tuiles. Rapporter le cas encore lent avant le lot de parcours.

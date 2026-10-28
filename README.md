@@ -217,3 +217,13 @@ Pour une suggestion, choisissez **Comparer sur la carte** : la portion concerné
 La première version repère des voies parallèles plausibles et des décalages soutenus juste au-delà des 15 m de tolérance. Ce sont des indices, pas des erreurs certaines. Une liste vide ne garantit pas l’exactitude complète d’une sortie. Maximum 500 suggestions par sortie, avec affichage progressif par 20.
 
 Les choix ignorés sont conservés sur cet appareil et inclus dans les nouvelles sauvegardes JSON. Pour les transférer, utilisez Lyon 100 1.4.0 ou une version ultérieure sur l’autre appareil. Vos anciennes sauvegardes restent utilisables ; elles ne contiennent simplement pas ces choix. Les diagnostics ne quittent pas votre appareil et restent utilisables hors ligne après téléchargement complet de la version.
+
+## Nouveautés 1.5.0 : carte allégée et onglet À vérifier
+
+La dernière mise à jour ajoutait la recherche des portions GPS incertaines, mais elle se trouvait dans les activités. Touchez maintenant directement **À vérifier**, puis choisissez une sortie. Vous pouvez comparer chaque suggestion à sa trace GPS et décider ; rien n'est ajouté automatiquement à votre progression. Ce premier diagnostic cherche les voies parallèles et les décalages GPS soutenus, pas tous les trous possibles.
+
+La carte prépare uniquement les rues proches de la zone affichée et réutilise leurs géométries. Choisir une portion ne reconstruit plus tout le réseau. Vos kilomètres, corrections et sauvegardes ne changent pas. Le premier affichage de Lyon entier peut encore demander un peu de temps ; le fond de carte dépend aussi de la connexion.
+
+Après la mise à jour, vérifiez **1.5.0** dans Réglages, puis zoomez sur votre quartier, déplacez la carte et essayez les filtres. Testez aussi **À vérifier** sur une sortie connue. Il n'est pas nécessaire de supprimer l'application ou de restaurer vos données pour cette mise à jour.
+
+La prochaine priorité sera l'exploration près d'un point choisi, puis les boucles et l'export GPX après préparation d'un réseau de navigation fiable. Cette fonction n'attendra pas la connexion automatique à Strava. L'import de vos propres itinéraires dans Strava dépend de ses fonctions payantes ; nous vérifierons une solution gratuite pour suivre le GPX sur iPhone. Les autres demandes sont conservées dans ROADMAP.md.
