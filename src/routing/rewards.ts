@@ -45,7 +45,7 @@ export function linkRoutingScore(graph:RoutingGraph,segments:Segment[]):ScoreLin
 }
 /** Inputs are the corrected coverage and exclusion set already used by the app.
  * Route proposals never persist or mutate this coverage. */
-export function createRouteRewards(graph:RoutingGraph,links:ScoreLinks,segments:Segment[],coverage:Coverage,excluded:Set<string>,district=0){
+export function createRouteRewards(graph:RoutingGraph,links:ScoreLinks,segments:Pick<Segment,'id'|'lengthMeters'|'district'|'connector'>[],coverage:Coverage,excluded:Set<string>,district=0){
  if(links.sourceHash!==graph.sourceHash)throw Error('Routing score links belong to another graph')
  const eligible=new Map(segments.filter(s=>!s.connector&&!excluded.has(s.id)&&(!district||s.district===district)).map(s=>[s.id,s]))
  const evaluate=(edgeIds:Iterable<string>)=>{

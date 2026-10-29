@@ -150,3 +150,18 @@ Ce lot est technique : pas de changement visuel ni d’activation de navigation,
 - [ ] Export GPX et validation dans une application gratuite iPhone ; contrôler les parcours et mesurer sur appareil réel avant d’annoncer une navigation fiable.
 
 Le prototype est séparé de l’interface 1.8.0 et ne change pas le matching. La validation de chemins dans OSM et de leur géométrie ne certifie pas l’ouverture d’un passage sur le terrain.
+
+## Livraison regroupée 1.9.0 — parcours et GPX
+
+Ce lot remplace les mentions « prochaine livraison visible » ci-dessus :
+
+- [x] Données OSM de routage reproductibles, chargement à la demande et réutilisation locale vérifiée.
+- [x] Proposition d’un vrai départ du graphe à moins de 200 m, affichage distinct et distance à vol d’oiseau.
+- [x] Interface 5/8/10/15 km, jusqu’à trois propositions, gain estimé dans l’arrondissement choisi, répétitions, budget et absence de résultat expliqués.
+- [x] Worker réutilisé, annulation immédiate par terminaison, résultats périmés ignorés après changement des entrées.
+- [x] Prévisualisation violette et export GPX exact ; partage sur les navigateurs compatibles, téléchargement en repli.
+- [x] Contrôle Chromium au format mobile : départ, génération, carte, GPX, absence de débordement horizontal, réutilisation hors connexion.
+- [ ] Recette sur iPhone réel : temps/mémoire, partage vers Fichiers et ouverture dans une application de suivi GPX gratuite. Pas de garantie d’import direct dans Strava/Plans.
+- [ ] Vérification de parcours sur le terrain et amélioration des cas sans proposition ; les accès OSM peuvent être incomplets.
+
+Ensuite, conserver l’ordre convenu : terminer la compatibilité téléphone avant Strava automatique et les demandes restantes. Les corrections trottoirs/Gallieni différées ne sont pas déclarées résolues. Avec les 128 crédits annoncés, une seule publication de production regroupe cette version ; calculs locaux et données de routage mises en cache à la demande.

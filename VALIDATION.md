@@ -230,3 +230,14 @@ Benchmark durable `tests/loops-benchmark.json` effectué avec couverture vide (a
 Essai privé supplémentaire sur la sauvegarde réelle effectué ; rapport et géométries personnalisées non publiés. Une boucle de 5 km demandés a été inspectée visuellement sur le réseau OSM : forme fermée, passages géométriquement continus, niveaux et connexions issus des nœuds source. Ce n’est pas une validation de praticabilité sur le terrain. Aucun trait GPS personnel rendu ou exporté. Les propositions ne sont pas des parcours mathématiquement optimaux.
 
 Aucune UI n’a changé : assets applicatifs toujours identiques à 1.8.0. Le Worker du prototype est testé comme module mais pas encore chargé par l’application. La recette de chargement/déchargement/annulation sur iPhone et le contrôle des trajets réels restent à faire dans le lot visible suivant.
+
+## 1.9.0 — parcours visibles (29 octobre 2026)
+
+- Tests ajoutés : client Worker réutilisé, annulation/rejet et résultats obsolètes, délai maximal et erreurs tardives ; chargement vérifié/cache corrompu/réparation/hors connexion/quota ; départ réellement connecté et rayon maximal ; GPX XML échappé/coordonnées exactes/fermeture/absence de temps/partage annulé ; interface sans téléchargement automatique, choix de distance, propositions, export, annulation et invalidation lors d’un changement de couverture.
+- Contrôle du build dans Chromium 134, vue 390 × 844 : zéro requête de routage avant action, 36 parties au premier départ, trois propositions pour 5 km, tracé violet inspecté et fichier GPX téléchargé. Aucun débordement horizontal et aucune erreur JavaScript. Fond de carte volontairement bloqué pour vérifier le repli existant.
+- Après passage hors connexion et changement de point, nouveau départ trouvé depuis CacheStorage sans nouvelle requête de routage.
+- Données publiques : 36 975 638 octets non compressés ; compression gzip locale des 36 parties : 7 081 235 octets (la compression et la facturation réelles dépendent de l’hébergeur). Association stricte : 65,58 % des mètres du score. Aucun préchargement des parties routing dans le service worker.
+- Aucune sauvegarde personnelle, trace GPS réelle ou proposition personnalisée dans les fichiers à publier. Les captures/exports du contrôle navigateur restent des diagnostics locaux.
+- Limites : pas de test sur iPhone physique ni de validation terrain. Le test Chromium ne certifie pas le partage iOS, la mémoire disponible sur l’appareil ou la compatibilité d’une application de guidage externe.
+
+Contrôle automatisé complet : **193 tests réussis dans 22 fichiers**, compilation TypeScript et build PWA réussis. L’avertissement Vite concernant la taille du paquet principal demeure ; les données de routage sont séparées et chargées uniquement à la demande.

@@ -1,4 +1,4 @@
-# Lyon 100 — version 1.1.2
+# Lyon 100 — version 1.9.0
 
 Explorez Lyon à pied ou en courant. Les portions de voies réellement parcourues deviennent vertes, au fil de vos sorties. Vos données restent sur votre appareil.
 
@@ -182,7 +182,7 @@ Le shell et le réseau sont précachés ; activités et progression restent loca
 
 ## Dépôt GitHub et Netlify
 
-Dépôt privé : https://github.com/royal-kebab-tacos/lyon-100. Relier le projet Netlify existant, branche main. La configuration netlify.toml définit Node 24, la commande npm run check et le dossier publié dist. Les tests doivent réussir avant chaque déploiement. Aucun compte, historique GPX ou JSON personnel ne doit être ajouté au dépôt.
+Dépôt public avec l’accord d’Arthur : https://github.com/royal-kebab-tacos/lyon-100. Relier le projet Netlify existant, branche main. La configuration netlify.toml définit Node 24, la commande npm run check et le dossier publié dist. Les tests doivent réussir avant chaque déploiement. Aucun compte, historique GPX ou JSON personnel ne doit être ajouté au dépôt.
 
 Les fichiers OSM volumineux sont compressés et répartis dans data/bundled. Après npm ci, ils sont reconstitués automatiquement et leur SHA-256 est vérifié. Le réseau est identique à la version 1.1.2 validée. Après une modification volontaire des données avec npm run prepare, exécuter node scripts/bundle-data.mjs avant de publier le commit, avec public/data/provenance.json. Ne pas éditer les morceaux manuellement.
 
@@ -255,9 +255,9 @@ La 1.7.0 rétablit également les passages piétons publics nécessaires pour re
 
 Dans Carte, utilisez **Autour d’un point → Choisir sur la carte**, puis touchez un lieu. Un cercle indique le rayon choisi : 250 m, 500 m, 1 km ou 2 km. Le panneau affiche les kilomètres encore à découvrir dans ce cercle, le nombre de noms de rues concernés et les dix plus proches. **Voir** zoome sur une portion locale de la rue. Les voies sans nom sont comptées séparément dans les mètres. Le filtre d’arrondissement et vos corrections s’appliquent.
 
-Les distances sont à vol d’oiseau, pas des itinéraires à pied. La liste inclut les petits restes de rues au statut « Terminée ». Le point n’est pas enregistré dans les sauvegardes et disparaît en quittant la carte. Vous pouvez le déplacer, annuler le choix ou l’effacer. Aucun réimport ou recalcul des activités n’est requis. Les boucles et l’export GPX viendront après la validation d’un réseau piéton routable.
+Les distances sont à vol d’oiseau, pas des itinéraires à pied. La liste inclut les petits restes de rues au statut « Terminée ». Le point n’est pas enregistré dans les sauvegardes et disparaît en quittant la carte. Vous pouvez le déplacer, annuler le choix ou l’effacer. Aucun réimport ou recalcul des activités n’est requis. Les boucles et l’export GPX sont disponibles depuis la version 1.9.0 (voir ci-dessous).
 
-## Préparation des parcours : lot technique après 1.8.0
+## Historique technique : préparation après 1.8.0
 
 Le placement du point reste disponible. Ce lot prépare le moteur de chemins, sans ajouter encore de bouton de génération et sans changer le numéro 1.8.0 de l’interface. Les activités, le réseau de progression et les sauvegardes restent indépendants du routage.
 
@@ -272,10 +272,30 @@ Les fichiers générés sont dans `.osm-cache/`, pas dans le site ni dans les sa
 
 Références du profil OSM : [accès](https://wiki.openstreetmap.org/wiki/Key:access), [sens piétons](https://wiki.openstreetmap.org/wiki/Key:oneway:foot), [barrières](https://wiki.openstreetmap.org/wiki/Barriers). Les règles retenues sont volontairement conservatrices, sans garantie d’exhaustivité ni d’accessibilité réelle.
 
-## Prototype de propositions de boucles
+## Historique technique : prototype de boucles
 
 Après préparation du graphe : `npm run routing:loops` prépare les correspondances avec le réseau de progression, puis essaie des boucles 5/8/10/15 km avec un départ de test près d’un repère public. La couverture est vide par défaut ; pour un diagnostic local seulement, un chemin de sauvegarde peut être fourni en argument. Les sorties personnalisées restent dans `.osm-cache/` et ne doivent pas être publiées.
 
 Ce prototype privilégie des portions restantes identifiées sans compter deux fois un passage. Il compare au maximum 24 combinaisons avec un budget commun ; il peut retourner moins de trois propositions, voire aucune. Les distances peuvent s’écarter de ±20 % de la demande. Les nouvelles portions sont des estimations conservatrices : une partie des axes du score n’est pas associée aux cheminements du réseau piéton. Aucun gain n’est enregistré tant qu’une activité réellement effectuée n’est pas importée.
 
 Le moteur et son Worker ne sont pas encore exposés dans l’application. Le prochain lot doit intégrer le chargement des données, le choix du départ, l’annulation, l’affichage puis l’export GPX. Aucun changement visible ni nouvelle version de l’interface dans ce lot.
+
+
+## Nouveauté 1.9.0 : préparer une boucle et emporter son GPX
+
+1. Dans **Carte → Autour d’un point**, choisissez un lieu sur la carte.
+2. Dans **Préparer une boucle**, choisissez 5, 8, 10 ou 15 km puis **Trouver un départ proche**. Le premier chargement nécessite une connexion. Le départ violet est un point du réseau piéton, situé au maximum à 200 m à vol d’oiseau ; le trajet pour le rejoindre n’est pas inclus.
+3. Vérifiez son emplacement puis cliquez sur **Générer depuis ce départ**. Jusqu’à trois propositions affichent leur distance, les nouveaux kilomètres estimés et les repassages. Le filtre d’arrondissement privilégie les nouveaux mètres dans cette zone ; la boucle peut en sortir.
+4. **Voir sur la carte** affiche la boucle en violet. **Exporter le GPX** permet de partager le fichier si le navigateur le propose, sinon de le télécharger. Sur iPhone, utilisez Fichiers ou une application compatible GPX. L’import direct dans Strava ou Plans n’est pas garanti.
+
+Vous pouvez annuler le chargement ou le calcul. Changer le point, la distance ou la progression efface les anciens parcours. Les calculs se font sur votre appareil et ne valident aucun kilomètre : seules les activités réellement importées et vos corrections modifient la progression. Aucun recalcul de vos anciennes activités ni changement du format de sauvegarde pour cette version.
+
+Ces propositions sont expérimentales : distance à ±20 %, calcul borné, parfois moins de trois résultats ou aucun. Les gains sont prudents car environ 66 % du réseau de progression est associé strictement aux cheminements de routage. Vérifiez les accès sur place. L’utilisation réelle sur iPhone et l’ouverture du GPX dans une application de guidage restent à confirmer.
+
+Les données de parcours sont téléchargées seulement à la demande, puis conservées dans le cache si le navigateur le permet. Elles peuvent ensuite être réutilisées hors connexion ; l’appareil peut toutefois effacer ce cache. Le fond de carte reste soumis à sa connexion habituelle. Cela limite les téléchargements répétés et la consommation Netlify.
+
+### Préparation reproductible des données
+
+`npm ci` reconstruit les fichiers nécessaires à partir des archives publiques présentes dans le dépôt. Le patch compressé `data/routing/` conserve les changements OSM, tags de nœuds et restrictions nécessaires, avec provenance et SHA-256. Il est appliqué séparément de la source de progression. Aucun Python ni téléchargement Overpass/PBF n’est nécessaire à l’installation ou au déploiement. La première préparation peut prendre environ une minute ; les suivantes vérifient le cache. Les parties `public/routing/` et le manifeste généré ne sont pas versionnés et ne sont pas préchargés par la PWA.
+
+Pour les 128 crédits annoncés jusqu’au 25 novembre, cette version regroupe les changements en une seule publication de production. Les essais se font localement et sur la branche de développement, avant la mise à jour de `main`.

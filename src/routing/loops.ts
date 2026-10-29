@@ -1,7 +1,12 @@
 import type { Coordinate } from '../types'
-import type { RoutingGraph } from './types'
+import type { RoutingGraph, RoutingEdge } from './types'
 import { createRoutingSearch } from './search'
 import type { createRouteRewards } from './rewards'
+// Graphs are immutable after loading; keep indexes for subsequent requests.
+const searchIndexes=new WeakMap<RoutingGraph,ReturnType<typeof createRoutingSearch>>()
+const edgeIndexes=new WeakMap<RoutingGraph,Map<string,RoutingEdge>>()
+function edgesFor(graph:RoutingGraph){let edges=edgeIndexes.get(graph);if(!edges){edges=new Map(graph.edges.map(e=>[e.id,e]));edgeIndexes.set(graph,edges)}return edges}
+function searchFor(graph:RoutingGraph){let search=searchIndexes.get(graph);if(!search){search=createRoutingSearch(graph);searchIndexes.set(graph,search)}return search}
 export interface RouteStep {edgeId:string;reverse:boolean}
 export interface LoopProposal {steps:RouteStep[];coordinates:Coordinate[];meters:number;newMeters:number;repeatedMeters:number}
 export interface LoopOptions {start:string;targetMeters:5000|8000|10000|15000;maxMilliseconds:number;maxVisited:number;signal?:AbortSignal}
@@ -9,7 +14,7 @@ export interface LoopResult {status:'complete'|'budget'|'cancelled'|'invalid-sta
 /** Verify connectivity and walking direction before presenting any geometry.
  * Repeated physical edges add distance, but never add exploration reward twice. */
 export function describeLoop(graph:RoutingGraph,start:string,steps:RouteStep[],rewards:ReturnType<typeof createRouteRewards>):LoopProposal|null {
- const edges=new Map(graph.edges.map(e=>[e.id,e])),seen=new Set<string>(),coordinates:Coordinate[]=[]
+ const edges=edgesFor(graph),seen=new Set<string>(),coordinates:Coordinate[]=[]
  let cursor=start,meters=0,repeatedMeters=0
  for(const step of steps){
   const e=edges.get(step.edgeId)
@@ -40,7 +45,7 @@ export function proposeLoops(graph:RoutingGraph,rewards:ReturnType<typeof create
   return false
  }
  if(stop())return result
- const search=createRoutingSearch(graph),sx=111195.08*Math.cos(start[1]*Math.PI/180),sy=111195.08
+ const search=searchFor(graph),sx=111195.08*Math.cos(start[1]*Math.PI/180),sy=111195.08
  // Keep one promising node in each angular sector and distance band. This
  // spreads the candidates, instead of repeatedly sampling one adjacent street.
  const bins=new Map<string,{id:string;angle:number;gain:number;distance:number}>()

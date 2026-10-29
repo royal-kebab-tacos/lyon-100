@@ -45,3 +45,8 @@ public/data/.*
 .openai/
 
 /public/data/lyon-connectors.json
+
+
+/public/routing/
+/src/routing/dataset-manifest.json
+/scripts/__pycache__/

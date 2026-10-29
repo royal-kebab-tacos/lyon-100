@@ -14,3 +14,9 @@
   for = "/index.html"
   [headers.values]
     Cache-Control = "no-cache"
+
+
+[[headers]]
+  for = "/routing/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

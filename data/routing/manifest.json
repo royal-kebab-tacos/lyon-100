@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "sha256": "47dc2ca1a9a64f3e74c8411a0fb8a349f837ffbd420149c1363c3b34d1ae1e45",
+  "parts": [
+    "data/routing/source-patch-000.bin",
+    "data/routing/source-patch-001.bin",
+    "data/routing/source-patch-002.bin",
+    "data/routing/source-patch-003.bin",
+    "data/routing/source-patch-004.bin",
+    "data/routing/source-patch-005.bin",
+    "data/routing/source-patch-006.bin",
+    "data/routing/source-patch-007.bin"
+  ],
+  "source": "OpenStreetMap / BBBike Lyon",
+  "sourceDate": "2026-10-24T00:00:00Z",
+  "pbfSha256": "58a3ce52b19ade2abde857eee0e92a176ab20eaddb8df3e8d0089a959cc12e19",
+  "license": "ODbL-1.0",
+  "description": "Public OSM way changes, node tags scoped to the Lyon boundary bounding box and restriction relations. No user activity or GPS data."
+}

@@ -14,6 +14,7 @@ export default defineConfig({
       lang: 'fr', theme_color: '#1b4c3d', background_color: '#f5f6f2', display: 'standalone', start_url: '/', scope: '/',
       icons: [{ src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' }, { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' }, { src: '/icons/maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }],
     },
-    workbox: { globPatterns: ['**/*.{js,css,html,png,json,woff2}'], maximumFileSizeToCacheInBytes: 64 * 1024 * 1024, navigateFallback: '/index.html', cleanupOutdatedCaches: true, runtimeCaching: [] },
+    workbox: { globPatterns: ['**/*.{js,css,html,png,json,woff2}'], globIgnores: ['routing/**'], maximumFileSizeToCacheInBytes: 64 * 1024 * 1024, navigateFallback: '/index.html', cleanupOutdatedCaches: true, runtimeCaching: [] },
   })],
 })
+
