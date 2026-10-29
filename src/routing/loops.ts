@@ -8,9 +8,9 @@ const edgeIndexes=new WeakMap<RoutingGraph,Map<string,RoutingEdge>>()
 function edgesFor(graph:RoutingGraph){let edges=edgeIndexes.get(graph);if(!edges){edges=new Map(graph.edges.map(e=>[e.id,e]));edgeIndexes.set(graph,edges)}return edges}
 function searchFor(graph:RoutingGraph){let search=searchIndexes.get(graph);if(!search){search=createRoutingSearch(graph);searchIndexes.set(graph,search)}return search}
 export interface RouteStep {edgeId:string;reverse:boolean}
-export interface LoopProposal {steps:RouteStep[];coordinates:Coordinate[];meters:number;newMeters:number;repeatedMeters:number}
+export interface LoopProposal {steps:RouteStep[];coordinates:Coordinate[];meters:number;newMeters:number;repeatedMeters:number;outsideMeters?:number;longRepeatedMeters?:number;shorter?:boolean;relief?:import('./relief').Relief}
 export interface LoopOptions {start:string;targetMeters:5000|8000|10000|15000;maxMilliseconds:number;maxVisited:number;signal?:AbortSignal}
-export interface LoopResult {status:'complete'|'budget'|'cancelled'|'invalid-start'|'incomplete-data';proposals:LoopProposal[];visited:number;attempts:number}
+export interface LoopResult {status:'complete'|'budget'|'cancelled'|'invalid-start'|'incomplete-data'|'outside-scope';proposals:LoopProposal[];visited:number;attempts:number}
 /** Verify connectivity and walking direction before presenting any geometry.
  * Repeated physical edges add distance, but never add exploration reward twice. */
 export function describeLoop(graph:RoutingGraph,start:string,steps:RouteStep[],rewards:ReturnType<typeof createRouteRewards>):LoopProposal|null {

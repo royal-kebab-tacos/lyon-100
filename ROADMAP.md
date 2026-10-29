@@ -165,3 +165,17 @@ Ce lot remplace les mentions « prochaine livraison visible » ci-dessus :
 - [ ] Vérification de parcours sur le terrain et amélioration des cas sans proposition ; les accès OSM peuvent être incomplets.
 
 Ensuite, conserver l’ordre convenu : terminer la compatibilité téléphone avant Strava automatique et les demandes restantes. Les corrections trottoirs/Gallieni différées ne sont pas déclarées résolues. Avec les 128 crédits annoncés, une seule publication de production regroupe cette version ; calculs locaux et données de routage mises en cache à la demande.
+
+## Préparation 1.10.0-dev.1 — petites rues et dénivelé
+
+Retour d’Arthur du 29 octobre : privilégier le quadrillage local, accepter les courts repassages et ajouter le relief. Ce lot est développé sur la branche de travail et **n’est pas publié sur Netlify** ; la production reste en 1.9.0.
+
+- [x] Cercle prioritaire avec marge limitée, majorité du parcours dans la zone, petits repassages permis et longues répétitions pénalisées.
+- [x] Choix indépendant d’un arrondissement dans le panneau des parcours ; affichage de sa frontière et zoom pour choisir le départ.
+- [x] Recherche locale de portions restantes, retour connecté, possibilité de parcours plus court sans remplissage artificiel.
+- [x] Données IGN intégrées hors ligne, préférence « Limiter les côtes », D+/D− estimés et profil ; inconnues signalées sur ponts/tunnels.
+- [x] Tests synthétiques du quadrillage, des limites, de l’annulation, du relief et des changements de réglages ; essais sur le réseau réel sans activités personnelles.
+- [ ] Recette sur iPhone réel, qualité des parcours sur les rues effectivement restantes d’Arthur, comparaison du dénivelé avec une sortie réelle.
+- [ ] Publication regroupée ultérieure après revue de cette version de travail.
+
+Les demandes précédentes différées restent conservées. Cette préparation ne modifie ni matching, ni tolérance GPS, ni progression ou sauvegardes.

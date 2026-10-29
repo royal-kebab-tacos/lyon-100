@@ -65,9 +65,10 @@ export const CityMap=memo(function CityMap(props:Props){
   const [showTiles,setShowTiles]=useState(true),[tileError,setTileError]=useState(false)
   const [nearby,setNearby]=useState<Coordinate|null>(null),[radius,setRadius]=useState(500),[picking,setPicking]=useState(false),[nearbyFocus,setNearbyFocus]=useState<Segment>()
   const [routePreview,setRoutePreview]=useState<RoutePreview|null>(null)
+  const [routeArea,setRouteArea]=useState(0)
   const preview=useCallback((value:RoutePreview|null)=>setRoutePreview(value),[])
   const center=useMemo<L.LatLngTuple>(()=>[45.7578,4.8351],[])
-  return <><NearbyPanel network={props.network} coverage={props.coverage} excluded={props.excluded} district={props.district} center={nearby} radius={radius} picking={picking} onPick={()=>setPicking(v=>!v)} onClear={()=>{setNearby(null);setPicking(false);setNearbyFocus(undefined)}} onRadius={setRadius} onLocate={s=>{setNearbyFocus(s);props.onSelect(s)}}/><RoutePanel point={nearby} networkVersion={props.network.version} coverage={props.coverage} excluded={props.excluded} district={props.district} picking={picking} onPreview={preview}/><div className="map-wrap"><div className="background-toggle"><button onClick={()=>setShowTiles(v=>!v)} aria-pressed={showTiles}>{showTiles?'Masquer le fond de carte':'Afficher le fond de carte'}</button>{tileError&&showTiles&&<span>Fond de carte indisponible. Les rues restent affichées.</span>}</div><MapContainer center={center} zoom={13} minZoom={10} maxZoom={19} className="city-map" preferCanvas attributionControl><BoundaryLayer network={props.network}/>{showTiles&&<TileLayer url={TILE_URL} eventHandlers={{tileerror:()=>setTileError(true)}} attribution=""/>}<OSMAttribution/><NetworkLayer {...props} picking={picking}/><SelectionLayer network={props.network} id={props.selectedId}/><Focus network={props.network} district={props.district} focusStreet={props.focusStreet}/><TraceLayer tracks={props.tracks}/><FocusSegment network={props.network} id={props.focusSegmentId}/><NearbyLayer center={nearby} radius={radius} picking={picking} onChoose={p=>{setNearby(p);setPicking(false)}} focus={nearbyFocus}/><RouteLayer preview={routePreview}/></MapContainer></div></>
+  return <><NearbyPanel network={props.network} coverage={props.coverage} excluded={props.excluded} district={props.district} center={nearby} radius={radius} picking={picking} onPick={()=>setPicking(v=>!v)} onClear={()=>{setNearby(null);setPicking(false);setNearbyFocus(undefined)}} onRadius={setRadius} onLocate={s=>{setNearbyFocus(s);props.onSelect(s)}}/><RoutePanel onArea={setRouteArea} radius={radius} point={nearby} networkVersion={props.network.version} coverage={props.coverage} excluded={props.excluded} district={props.district} picking={picking} onPreview={preview}/><div className="map-wrap"><div className="background-toggle"><button onClick={()=>setShowTiles(v=>!v)} aria-pressed={showTiles}>{showTiles?'Masquer le fond de carte':'Afficher le fond de carte'}</button>{tileError&&showTiles&&<span>Fond de carte indisponible. Les rues restent affichées.</span>}</div><MapContainer center={center} zoom={13} minZoom={10} maxZoom={19} className="city-map" preferCanvas attributionControl><BoundaryLayer network={props.network}/>{showTiles&&<TileLayer url={TILE_URL} eventHandlers={{tileerror:()=>setTileError(true)}} attribution=""/>}<OSMAttribution/><NetworkLayer {...props} picking={picking}/><SelectionLayer network={props.network} id={props.selectedId}/><Focus network={props.network} district={props.district} focusStreet={props.focusStreet}/><TraceLayer tracks={props.tracks}/><FocusSegment network={props.network} id={props.focusSegmentId}/><NearbyLayer center={nearby} radius={radius} picking={picking} onChoose={p=>{setNearby(p);setPicking(false)}} focus={nearbyFocus}/><RouteScopeLayer network={props.network} district={routeArea}/><RouteLayer preview={routePreview}/></MapContainer></div></>
 })
 function BoundaryLayer({network}:{network:Network}){const map=useMap();useEffect(()=>{const layer=L.geoJSON(network.boundary,{style:{color:'#9eaf95',weight:1.5,dashArray:'5 5',fillColor:'#f2f5ec',fillOpacity:.15},interactive:false}).addTo(map);return()=>{layer.remove()}},[network,map]);return null}
 function OSMAttribution(){const map=useMap();useEffect(()=>{const text='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>';map.attributionControl.addAttribution(text);return()=>{map.attributionControl.removeAttribution(text)}},[map]);return null}
@@ -94,4 +95,14 @@ function RouteLayer({preview}:{preview:RoutePreview|null}){
   else map.setView([p[1],p[0]],17)
   return()=>{group.remove();renderer.remove()}
  },[map,preview]);return null
+}
+
+function RouteScopeLayer({network,district}:{network:Network;district:number}){
+ const map=useMap()
+ useEffect(()=>{
+  const zone=network.districts?.find(d=>d.id===district);if(!zone)return
+  const layer=L.geoJSON(zone.boundary,{style:{color:'#7023b7',weight:2,dashArray:'6 5',fillOpacity:.03},interactive:false}).addTo(map)
+  map.fitBounds(layer.getBounds(),{padding:[25,25]})
+  return()=>{layer.remove()}
+ },[map,network,district]);return null
 }

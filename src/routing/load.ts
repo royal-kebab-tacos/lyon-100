@@ -1,8 +1,8 @@
 import manifest from './dataset-manifest.json'
 import type {RoutingGraph} from './types'
 import type {ScoreLinks} from './rewards'
-import type {Segment} from '../types'
-export interface RoutingDataset {schemaVersion:1;networkVersion:string;graph:RoutingGraph;links:ScoreLinks;score:Pick<Segment,'id'|'lengthMeters'|'district'>[]}
+import type {District,Segment} from '../types'
+export interface RoutingDataset {schemaVersion:1;networkVersion:string;graph:RoutingGraph;links:ScoreLinks;districts?:District[];elevation?:import('./relief').ElevationData;score:Pick<Segment,'id'|'lengthMeters'|'district'>[]}
 const hex=(bytes:ArrayBuffer)=>Array.from(new Uint8Array(bytes),b=>b.toString(16).padStart(2,'0')).join('')
 const digest=async(b:Uint8Array)=>hex(await crypto.subtle.digest('SHA-256',b as Uint8Array<ArrayBuffer>))
 /** Fetch only on demand, verify every chunk, and reuse immutable parts offline.

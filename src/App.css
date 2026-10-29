@@ -71,3 +71,8 @@
 [data-theme=dark] .route-panel select, [data-theme=dark] .route-options li { background:#302940; color:#eae5f2; border-color:#77638e; }
 [data-theme=dark] .route-options li.selected { border-color:#caa3f2; }
 @media(max-width:500px){.route-options{grid-template-columns:1fr}.route-panel .button{min-height:44px}.route-panel select{max-width:100%}}
+
+.relief-profile {color:inherit;margin:.6rem 0}
+.relief-profile svg {display:block;width:100%;max-height:110px;color:#7023b7}
+.relief-profile small {display:block;font-size:.8rem;line-height:1.4}
+.route-panel select {max-width:100%}

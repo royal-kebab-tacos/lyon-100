@@ -1,4 +1,6 @@
-# Lyon 100 — version 1.9.0
+# Lyon 100 — version de travail 1.10.0-dev.1
+
+**Cette branche prépare les nouveaux parcours locaux et le relief. Elle n’est pas publiée : le site Netlify reste en 1.9.0.**
 
 Explorez Lyon à pied ou en courant. Les portions de voies réellement parcourues deviennent vertes, au fil de vos sorties. Vos données restent sur votre appareil.
 
@@ -299,3 +301,16 @@ Les données de parcours sont téléchargées seulement à la demande, puis cons
 `npm ci` reconstruit les fichiers nécessaires à partir des archives publiques présentes dans le dépôt. Le patch compressé `data/routing/` conserve les changements OSM, tags de nœuds et restrictions nécessaires, avec provenance et SHA-256. Il est appliqué séparément de la source de progression. Aucun Python ni téléchargement Overpass/PBF n’est nécessaire à l’installation ou au déploiement. La première préparation peut prendre environ une minute ; les suivantes vérifient le cache. Les parties `public/routing/` et le manifeste généré ne sont pas versionnés et ne sont pas préchargés par la PWA.
 
 Pour les 128 crédits annoncés jusqu’au 25 novembre, cette version regroupe les changements en une seule publication de production. Les essais se font localement et sur la branche de développement, avant la mise à jour de `main`.
+
+
+## En préparation : quadriller les rues proches et limiter les côtes
+
+Dans Préparer une boucle, choisissez **Autour du point** pour privilégier le cercle bleu, ou un **arrondissement** pour explorer sa zone. Le choix d’un arrondissement affiche sa limite et zoome sur elle : placez ensuite le départ souhaité sur la carte.
+
+Le générateur enchaîne des portions voisines encore à découvrir. Il accepte de courts repassages et évite autant que possible les longues liaisons répétées. Il reste majoritairement dans la zone ; de petits débordements sont permis. Si une distance n’est pas pertinente dans ce secteur, il peut proposer plus court au lieu d’ajouter des kilomètres. Les propositions restent des heuristiques, pas une promesse de couvrir toutes les rues ni d’être optimales.
+
+**Limiter les côtes**, actif par défaut, intervient pendant le calcul. Chaque proposition affiche le D+ (somme estimée des montées), le D− et le profil. Les altitudes proviennent de l’IGN RGE ALTI, échantillonnées sur le réseau public et préparées à l’avance. Aucun appel à l’IGN ni envoi de votre point ou de vos activités au moment de générer. Les altitudes sont chargées et conservées avec les autres données de parcours. Les ponts et tunnels restent inconnus lorsque l’altitude du terrain ne représente pas le passage ; le pourcentage renseigné et les interruptions du profil l’indiquent.
+
+Les données IGN sont sous [Licence Ouverte 2.0](https://www.data.gouv.fr/datasets/rge-alti-r) ; [documentation du service altimétrique](https://cartes.gouv.fr/aide/fr/guides-utilisateur/utiliser-les-services-de-la-geoplateforme/calcul-altimetrique/). L’archive publique de 131 328 points est vérifiée par SHA-256. L’installation et le build n’appellent pas le service : ils utilisent les parties compressées présentes dans le dépôt. Pour renouveler ces données en développement : `node --import tsx scripts/elevation-points.ts`, puis `python scripts/fetch-elevation.py` et `python scripts/pack-elevation.py`.
+
+Cette version de travail conserve le format des sauvegardes et les résultats de matching. Aucun nouveau déploiement de production pour ce lot préparatoire.

@@ -241,3 +241,21 @@ Aucune UI n’a changé : assets applicatifs toujours identiques à 1.8.0. Le Wo
 - Limites : pas de test sur iPhone physique ni de validation terrain. Le test Chromium ne certifie pas le partage iOS, la mémoire disponible sur l’appareil ou la compatibilité d’une application de guidage externe.
 
 Contrôle automatisé complet : **193 tests réussis dans 22 fichiers**, compilation TypeScript et build PWA réussis. L’avertissement Vite concernant la taille du paquet principal demeure ; les données de routage sont séparées et chargées uniquement à la demande.
+
+## 1.10.0-dev.1 — quadrillage local et relief (29 octobre 2026)
+
+Version de travail, non déployée en production. **204 tests réussis dans 24 fichiers**, lint sans avertissement nouveau, TypeScript et build PWA réussis. Les avertissements Vite préexistants sur le chargement futur de configuration et la taille du paquet principal restent présents.
+
+Tests ajoutés : quadrillage d’une grille, petits repassages autorisés, proposition plus courte sans remplissage, sortie de périmètre au milieu d’une géométrie, frontière réelle d’arrondissement et marge, départ hors zone, sens uniques et retour, budget partagé/annulation, gains marginaux avec recouvrements/exclusions/couverture, relief modifiant le choix du trajet, ascension/descente inversées, sommets intermédiaires, données inconnues sur pont/tunnel, profil SVG interrompu et invalidation après changement de rayon/zone/préférence relief.
+
+Données IGN : 131 328 échantillons publics, aucune valeur manquante sur les points demandés ; les ponts/tunnels sont volontairement non échantillonnés. Archive gzip de 858 764 octets, 14 parties, SHA-256 vérifié avant préparation. Provenance/licence conservées. Aucun appel IGN pendant les calculs de l’application ou le build. Les données de parcours complètes représentent 40 545 522 octets avant compression et restent hors pré-cache PWA, chargées à la demande.
+
+Essais reproductibles sur le réseau complet avec couverture vide, sans trace personnelle (`tests/local-routing-benchmark.json`) :
+
+- Cercle de 500 m autour d’un point public de Croix-Rousse : première proposition 5 377 m, 3 217 m nouveaux estimés, D+ estimé 36 m, 100 % du trajet dans le cercle.
+- Départ public vers les Terreaux, arrondissement 1 : première proposition sans préférence relief 5 478 m / D+ estimé 168 m ; avec préférence relief 5 203 m / D+ estimé 38 m. Profil connu sur environ 97–98 % du trajet ; ne pas présenter ces nombres comme un relevé de terrain.
+- Sur cet environnement, les cas mesurés restent sous deux secondes. Ce n’est pas une mesure de performance iPhone.
+
+Contrôle Chromium 134, viewport 390 × 844 : sélection du point, génération dans le cercle, profil visible, carte quadrillée, téléchargement GPX, zéro débordement horizontal, absence d’erreur JavaScript. Changement en arrondissement 1, zoom sur sa frontière, nouveau point et génération vérifiés. Le contrôle a révélé puis permis de corriger le recentrage intempestif sur l’ancien départ au changement de zone. Réutilisation des 39 parties déjà chargées pour retrouver un départ hors connexion. Les caches et diagnostics restent locaux.
+
+Limites : pas de recette iPhone physique ni de parcours effectué ; D+ de terrain estimé avec bruit résiduel possible, profil inconnu sur certains ouvrages. Heuristique locale, pas de garantie d’optimum, d’absence totale de longues répétitions ou de couverture de toutes les petites rues. Les propositions sous le budget demandé sont signalées. Un premier chargement exige une connexion et la conservation du cache dépend du navigateur.

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "sha256": "7aa61219eba8d2fcd78b3fad1be0b3e9273e74864f478fad6fb6b61f7ee334d7",
+  "sourceHash": "0ab691691b70e6eb576e8e647d7a4d5222b8001ec8558f29e21f739b031e3937",
+  "source": "IGN RGE ALTI / Géoplateforme — Licence Ouverte 2.0",
+  "retrievedAt": "2026-10-29T21:28:05.822599+00:00",
+  "parts": [
+    "data/routing/elevation-000.bin",
+    "data/routing/elevation-001.bin",
+    "data/routing/elevation-002.bin",
+    "data/routing/elevation-003.bin",
+    "data/routing/elevation-004.bin",
+    "data/routing/elevation-005.bin",
+    "data/routing/elevation-006.bin",
+    "data/routing/elevation-007.bin",
+    "data/routing/elevation-008.bin",
+    "data/routing/elevation-009.bin",
+    "data/routing/elevation-010.bin",
+    "data/routing/elevation-011.bin",
+    "data/routing/elevation-012.bin",
+    "data/routing/elevation-013.bin"
+  ],
+  "points": 131328,
+  "missingPoints": 0,
+  "sampleSpacingMeters": 25,
+  "documentation": "https://cartes.gouv.fr/aide/fr/guides-utilisateur/utiliser-les-services-de-la-geoplateforme/calcul-altimetrique/"
+}

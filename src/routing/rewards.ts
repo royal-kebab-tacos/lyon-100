@@ -57,3 +57,17 @@ export function createRouteRewards(graph:RoutingGraph,links:ScoreLinks,segments:
  }
  return {evaluate,edgeGains:new Map(graph.edges.map(e=>[e.id,evaluate([e.id])]))}
 }
+
+/** Per-proposal marginal reward, including overlapping links on different edges. */
+export function createRewardPlanner(links:ScoreLinks,segments:Pick<Segment,'id'|'lengthMeters'|'district'|'connector'>[],coverage:Coverage,excluded:Set<string>,district=0){
+ const eligible=new Map(segments.filter(s=>!s.connector&&!excluded.has(s.id)&&(!district||s.district===district)).map(s=>[s.id,s.lengthMeters])),planned:Coverage={}
+ const gain=(id:string,commit=false)=>{
+  let meters=0
+  for(const link of links.byEdge[id]||[]){const length=eligible.get(link.segmentId);if(!length)continue
+   const old=planned[link.segmentId]||coverage[link.segmentId]||[],next=mergeIntervals([...old,...link.ranges])
+   meters+=length*Math.max(0,fraction(next)-fraction(old));if(commit)planned[link.segmentId]=next
+  }
+  return meters
+ }
+ return {gain:(id:string)=>gain(id),visit:(id:string)=>gain(id,true)}
+}

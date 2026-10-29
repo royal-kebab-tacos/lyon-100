@@ -1,0 +1,147 @@
+{
+  "coverage": "empty synthetic coverage; public OSM locations only",
+  "date": "2026-10-29",
+  "elevationSource": "IGN RGE ALTI; terrain estimates; bridges/tunnels unknown",
+  "runs": [
+    {
+      "name": "Croix-Rousse cercle 500m",
+      "avoidHills": false,
+      "ms": 1141.0214100000003,
+      "status": "complete",
+      "proposals": [
+        {
+          "meters": 5377,
+          "newMeters": 3217,
+          "repeat": 444,
+          "up": 36,
+          "known": 100,
+          "inside": 100,
+          "shorter": false
+        },
+        {
+          "meters": 5487,
+          "newMeters": 3202,
+          "repeat": 263,
+          "up": 39,
+          "known": 100,
+          "inside": 100,
+          "shorter": false
+        },
+        {
+          "meters": 5416,
+          "newMeters": 2901,
+          "repeat": 517,
+          "up": 37,
+          "known": 100,
+          "inside": 100,
+          "shorter": false
+        }
+      ]
+    },
+    {
+      "name": "Croix-Rousse cercle 500m",
+      "avoidHills": true,
+      "ms": 1150.7793500000002,
+      "status": "complete",
+      "proposals": [
+        {
+          "meters": 5377,
+          "newMeters": 3217,
+          "repeat": 444,
+          "up": 36,
+          "known": 100,
+          "inside": 100,
+          "shorter": false
+        },
+        {
+          "meters": 5487,
+          "newMeters": 3202,
+          "repeat": 263,
+          "up": 39,
+          "known": 100,
+          "inside": 100,
+          "shorter": false
+        },
+        {
+          "meters": 5416,
+          "newMeters": 2901,
+          "repeat": 517,
+          "up": 37,
+          "known": 100,
+          "inside": 100,
+          "shorter": false
+        }
+      ]
+    },
+    {
+      "name": "Terreaux arrondissement 1",
+      "avoidHills": false,
+      "ms": 648.1093249999999,
+      "status": "complete",
+      "proposals": [
+        {
+          "meters": 5478,
+          "newMeters": 3583,
+          "repeat": 165,
+          "up": 168,
+          "known": 97,
+          "inside": 100,
+          "shorter": false
+        },
+        {
+          "meters": 5229,
+          "newMeters": 3538,
+          "repeat": 217,
+          "up": 170,
+          "known": 97,
+          "inside": 100,
+          "shorter": false
+        },
+        {
+          "meters": 5497,
+          "newMeters": 3313,
+          "repeat": 489,
+          "up": 117,
+          "known": 98,
+          "inside": 100,
+          "shorter": false
+        }
+      ]
+    },
+    {
+      "name": "Terreaux arrondissement 1",
+      "avoidHills": true,
+      "ms": 1061.599115,
+      "status": "complete",
+      "proposals": [
+        {
+          "meters": 5203,
+          "newMeters": 3501,
+          "repeat": 588,
+          "up": 38,
+          "known": 98,
+          "inside": 100,
+          "shorter": false
+        },
+        {
+          "meters": 5437,
+          "newMeters": 3459,
+          "repeat": 398,
+          "up": 48,
+          "known": 99,
+          "inside": 100,
+          "shorter": false
+        },
+        {
+          "meters": 5334,
+          "newMeters": 3384,
+          "repeat": 366,
+          "up": 45,
+          "known": 98,
+          "inside": 100,
+          "shorter": false
+        }
+      ]
+    }
+  ]
+}
