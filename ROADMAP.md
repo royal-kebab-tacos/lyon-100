@@ -179,3 +179,11 @@ Retour d’Arthur du 29 octobre : privilégier le quadrillage local, accepter le
 - [ ] Publication regroupée ultérieure après revue de cette version de travail.
 
 Les demandes précédentes différées restent conservées. Cette préparation ne modifie ni matching, ni tolérance GPS, ni progression ou sauvegardes.
+
+## Confort GPX — 1.10.0-dev.2
+
+- Téléchargement direct disponible en complément du partage, notamment si une application destinataire n’apparaît pas dans la feuille de partage.
+- Échec du partage ou de sa détection : repli vers le téléchargement. Annulation volontaire : aucun téléchargement. Protection contre les doubles clics et messages de résultat devenus périmés après changement de parcours.
+- Le fichier conserve la géométrie exacte et inclut un résumé textuel : distance, nouvelles portions estimées, D+/D− et proportion du relief renseignée. Aucune altitude ponctuelle ni date d’activité inventée.
+- Profil altimétrique gradué en kilomètres.
+- Travail enregistré seulement sur develop/parcours-1.9 avec [skip netlify] ; production toujours 1.9.0. Recette sur iPhone physique et application GPX destinataire encore nécessaire.

@@ -259,3 +259,11 @@ Essais reproductibles sur le réseau complet avec couverture vide, sans trace pe
 Contrôle Chromium 134, viewport 390 × 844 : sélection du point, génération dans le cercle, profil visible, carte quadrillée, téléchargement GPX, zéro débordement horizontal, absence d’erreur JavaScript. Changement en arrondissement 1, zoom sur sa frontière, nouveau point et génération vérifiés. Le contrôle a révélé puis permis de corriger le recentrage intempestif sur l’ancien départ au changement de zone. Réutilisation des 39 parties déjà chargées pour retrouver un départ hors connexion. Les caches et diagnostics restent locaux.
 
 Limites : pas de recette iPhone physique ni de parcours effectué ; D+ de terrain estimé avec bruit résiduel possible, profil inconnu sur certains ouvrages. Heuristique locale, pas de garantie d’optimum, d’absence totale de longues répétitions ou de couverture de toutes les petites rues. Les propositions sous le budget demandé sont signalées. Un premier chargement exige une connexion et la conservation du cache dépend du navigateur.
+
+## Contrôles 1.10.0-dev.2 — 30 octobre 2026
+
+- Suite complète : 209 tests passants, lint, TypeScript et build réussis ; ajout ensuite d’un test de partage réussi, avec les 12 tests ciblés export/interface/profil passants (210 tests au total).
+- Export : téléchargement explicite, partage non disponible, détection qui lève une erreur, refus du partage, annulation et succès ; nettoyage du lien et révocation différée de l’URL. XML analysé, géométrie conservée, résumé avec relief incomplet, absence de dates et d’altitudes ponctuelles inventées.
+- Chromium 134 au format 390×844 : génération cercle/arrondissement, profil et boutons inspectés, téléchargement GPX réel et message de résultat, aucun débordement horizontal ni erreur JavaScript. Recalcul hors connexion après chargement des 39 parties de routage.
+- Build final propre : 30 entrées PWA ; routage toujours exclu du précache. Avertissements Vite préexistants sur configuration native et taille du bundle.
+- Ce contrôle n’est pas une recette sur iPhone physique ni une validation dans une application tierce. Aucun déploiement Netlify.

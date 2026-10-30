@@ -3,7 +3,7 @@ import type {Coordinate,Coverage} from '../types'
 import type {Departure} from '../routing/departure'
 import type {LoopProposal,LoopResult} from '../routing/loops'
 import {createRouteClient} from '../routing/client'
-import {exportLoop} from '../routing/gpx'
+import {exportLoop,type ExportMode} from '../routing/gpx'
 import {ReliefProfile} from './ReliefProfile'
 import {km} from '../stats/progress'
 export interface RoutePreview {departure:Departure;loop?:LoopProposal}
@@ -11,7 +11,8 @@ interface Props {point:Coordinate|null;radius?:number;networkVersion:string;cove
 export function RoutePanel({point,networkVersion,coverage,excluded,district,radius=500,picking,onPreview,onArea}:Props){
  const [distance,setDistance]=useState<5000|8000|10000|15000>(5000),[departure,setDeparture]=useState<Departure|null>(null),[result,setResult]=useState<LoopResult|null>(null),[selected,setSelected]=useState(-1),[busy,setBusy]=useState(false),[message,setMessage]=useState('')
  const [area,setArea]=useState(0),[avoidHills,setAvoidHills]=useState(true)
- const [client]=useState(createRouteClient),generation=useRef(0)
+ const [client]=useState(createRouteClient),generation=useRef(0),exporting=useRef(false)
+ const [saving,setSaving]=useState(false)
  const invalidate=useCallback(()=>{generation.current++;client.cancel()},[client])
  useEffect(()=>{
   invalidate()
@@ -41,7 +42,13 @@ export function RoutePanel({point,networkVersion,coverage,excluded,district,radi
   finally{if(ticket===generation.current)setBusy(false)}
  }
  const show=(loop:LoopProposal,index:number)=>{setSelected(index);onPreview({departure:departure!,loop});document.querySelector('.city-map')?.scrollIntoView({behavior:'smooth',block:'center'})}
- const save=async(loop:LoopProposal)=>{try{await exportLoop(loop)}catch(error){setMessage(error instanceof Error?error.message:'L’export a échoué. Réessayez.')}}
+ const save=async(loop:LoopProposal,mode:ExportMode='auto')=>{
+  if(exporting.current)return
+  const ticket=generation.current;exporting.current=true;setSaving(true)
+  try{const outcome=await exportLoop(loop,mode);if(ticket===generation.current)setMessage(outcome==='cancelled'?'Partage annulé.':outcome==='shared'?'Parcours transmis au partage.':'Téléchargement du GPX lancé. Retrouvez-le dans les téléchargements de votre navigateur ou dans Fichiers.')}
+  catch(error){if(ticket===generation.current)setMessage(error instanceof Error?error.message:'L’export a échoué. Réessayez.')}
+  finally{exporting.current=false;setSaving(false)}
+ }
  return <section className="route-panel" aria-label="Proposer un parcours">
   <h3>Préparer une boucle</h3>
   <p>Quadrillez les petites rues proches. Les courts repassages sont acceptés ; la zone et le relief passent avant la distance exacte.</p>
@@ -55,9 +62,9 @@ export function RoutePanel({point,networkVersion,coverage,excluded,district,radi
    {departure&&<p>Départ violet à environ <strong>{Math.round(departure.distance)} m à vol d’oiseau</strong> du point choisi. Le trajet pour le rejoindre n’est pas inclus. {area?`Exploration prioritaire de Lyon ${area}.`:`Exploration prioritaire du cercle de ${radius} m.`}</p>}
    <p role="status" aria-live="polite">{message}</p>
    {result?.status==='budget'&&result.proposals.length>0&&<p>Limite de calcul atteinte : voici les propositions trouvées dans le temps et le budget disponibles.</p>}
-   {!!result?.proposals.length&&<ol className="route-options">{result.proposals.map((loop,i)=><li key={i} className={selected===i?'selected':''}><h4>Proposition {i+1} · {km(loop.meters)} km</h4><p><strong>≈ {km(loop.newMeters)} km nouveaux estimés</strong><br/>{km(loop.repeatedMeters)} km de repassages identifiés{loop.outsideMeters!==undefined&&<><br/>{Math.round(100*(1-loop.outsideMeters/loop.meters))} % du parcours dans la zone</>}</p>{loop.shorter&&<p>Parcours plus court : la zone a été privilégiée, sans ajouter des kilomètres de liaison.</p>}{loop.relief&&<ReliefProfile relief={loop.relief}/>}<div className="setting-buttons"><button className="button" aria-pressed={selected===i} onClick={()=>show(loop,i)}>Voir sur la carte</button><button className="button" onClick={()=>void save(loop)}>Exporter le GPX</button></div></li>)}</ol>}
+   {!!result?.proposals.length&&<ol className="route-options">{result.proposals.map((loop,i)=><li key={i} className={selected===i?'selected':''}><h4>Proposition {i+1} · {km(loop.meters)} km</h4><p><strong>≈ {km(loop.newMeters)} km nouveaux estimés</strong><br/>{km(loop.repeatedMeters)} km de repassages identifiés{loop.outsideMeters!==undefined&&<><br/>{Math.round(100*(1-loop.outsideMeters/loop.meters))} % du parcours dans la zone</>}</p>{loop.shorter&&<p>Parcours plus court : la zone a été privilégiée, sans ajouter des kilomètres de liaison.</p>}{loop.relief&&<ReliefProfile relief={loop.relief}/>}<div className="setting-buttons"><button className="button" aria-pressed={selected===i} onClick={()=>show(loop,i)}>Voir sur la carte</button><button className="button" disabled={saving} onClick={()=>void save(loop)}>Exporter le GPX</button><button className="button" disabled={saving} onClick={()=>void save(loop,'download')}>Télécharger le fichier</button></div></li>)}</ol>}
   </>}
   <p className="muted route-explanation">Parcours expérimentaux : distance indicative, jusqu’à +10 %, parfois plus courts pour rester proches. Le relief est estimé d’après le terrain IGN ; les passages inconnus ne sont pas considérés comme plats. Estimation prudente des nouveaux mètres, sur les portions associées au réseau piéton (environ 66 % du réseau de progression). Vérifiez les accès sur place. Aucun kilomètre n’est validé en générant une boucle.</p>
-  <p className="muted">Sur iPhone, le bouton GPX ouvre le partage si disponible, sinon télécharge le fichier. Enregistrez-le dans Fichiers ou ouvrez-le dans une application compatible ; l’import direct dans Strava ou Plans n’est pas garanti.</p>
+  <p className="muted">Sur iPhone, le bouton GPX ouvre le partage si disponible, sinon télécharge le fichier. « Télécharger le fichier » permet aussi de récupérer le GPX directement. Enregistrez-le dans Fichiers ou ouvrez-le dans une application compatible ; l’import direct dans Strava ou Plans n’est pas garanti.</p>
  </section>
 }

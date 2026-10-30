@@ -1,4 +1,4 @@
-# Lyon 100 — version de travail 1.10.0-dev.1
+# Lyon 100 — version de travail 1.10.0-dev.2
 
 **Cette branche prépare les nouveaux parcours locaux et le relief. Elle n’est pas publiée : le site Netlify reste en 1.9.0.**
 
@@ -314,3 +314,11 @@ Le générateur enchaîne des portions voisines encore à découvrir. Il accepte
 Les données IGN sont sous [Licence Ouverte 2.0](https://www.data.gouv.fr/datasets/rge-alti-r) ; [documentation du service altimétrique](https://cartes.gouv.fr/aide/fr/guides-utilisateur/utiliser-les-services-de-la-geoplateforme/calcul-altimetrique/). L’archive publique de 131 328 points est vérifiée par SHA-256. L’installation et le build n’appellent pas le service : ils utilisent les parties compressées présentes dans le dépôt. Pour renouveler ces données en développement : `node --import tsx scripts/elevation-points.ts`, puis `python scripts/fetch-elevation.py` et `python scripts/pack-elevation.py`.
 
 Cette version de travail conserve le format des sauvegardes et les résultats de matching. Aucun nouveau déploiement de production pour ce lot préparatoire.
+
+## Confort GPX — 1.10.0-dev.2
+
+- Téléchargement direct disponible en complément du partage, notamment si une application destinataire n’apparaît pas dans la feuille de partage.
+- Échec du partage ou de sa détection : repli vers le téléchargement. Annulation volontaire : aucun téléchargement. Protection contre les doubles clics et messages de résultat devenus périmés après changement de parcours.
+- Le fichier conserve la géométrie exacte et inclut un résumé textuel : distance, nouvelles portions estimées, D+/D− et proportion du relief renseignée. Aucune altitude ponctuelle ni date d’activité inventée.
+- Profil altimétrique gradué en kilomètres.
+- Travail enregistré seulement sur develop/parcours-1.9 avec [skip netlify] ; production toujours 1.9.0. Recette sur iPhone physique et application GPX destinataire encore nécessaire.

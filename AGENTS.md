@@ -148,3 +148,11 @@ Six essais maximum avec préférence relief (trois ordinaires et trois pénalisa
 Altitudes publiques IGN RGE ALTI, Licence Ouverte 2.0 : 131 328 positions publiques OSM échantillonnées au plus tous les 25 m, arrondies à six décimales pour les clés, altitudes à 0,1 m. Archive gzip en parties `data/routing/elevation-*.bin`, empreintes et provenance dans `elevation-manifest.json`. Acquisition développeur explicite via `scripts/elevation-points.ts`, `scripts/fetch-elevation.py`, `scripts/pack-elevation.py`, jamais pendant le build ni à partir de positions/activités personnelles. Build entièrement depuis les archives. Pas de requête IGN à chaque parcours.
 
 Ponts et tunnels : ne jamais assimiler le terrain sous le passage à son altitude ; profil et couverture altimétrique explicitement incomplets. Altitude inconnue != plat. D+/D− estimés, traitement du petit bruit à 1 m, profil avec interruptions plutôt que raccordements inventés. L’option « Limiter les côtes » est active par défaut et influe sur la recherche et le classement. Elle ne promet pas un parcours plat. Les distances/gains restent indépendants du score enregistré ; sauvegarde et matching inchangés.
+
+## Confort GPX — 1.10.0-dev.2
+
+- Téléchargement direct disponible en complément du partage, notamment si une application destinataire n’apparaît pas dans la feuille de partage.
+- Échec du partage ou de sa détection : repli vers le téléchargement. Annulation volontaire : aucun téléchargement. Protection contre les doubles clics et messages de résultat devenus périmés après changement de parcours.
+- Le fichier conserve la géométrie exacte et inclut un résumé textuel : distance, nouvelles portions estimées, D+/D− et proportion du relief renseignée. Aucune altitude ponctuelle ni date d’activité inventée.
+- Profil altimétrique gradué en kilomètres.
+- Travail enregistré seulement sur develop/parcours-1.9 avec [skip netlify] ; production toujours 1.9.0. Recette sur iPhone physique et application GPX destinataire encore nécessaire.
