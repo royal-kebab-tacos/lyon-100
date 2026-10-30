@@ -267,3 +267,14 @@ Limites : pas de recette iPhone physique ni de parcours effectué ; D+ de terrai
 - Chromium 134 au format 390×844 : génération cercle/arrondissement, profil et boutons inspectés, téléchargement GPX réel et message de résultat, aucun débordement horizontal ni erreur JavaScript. Recalcul hors connexion après chargement des 39 parties de routage.
 - Build final propre : 30 entrées PWA ; routage toujours exclu du précache. Avertissements Vite préexistants sur configuration native et taille du bundle.
 - Ce contrôle n’est pas une recette sur iPhone physique ni une validation dans une application tierce. Aucun déploiement Netlify.
+
+## Contrôles 1.10.0-dev.3 — petits restes
+
+- Suite complète : 219 tests / 25 fichiers, lint, TypeScript et build réussis. Avertissements Vite préexistants sur configuration native et taille du bundle.
+- Nouvelles régressions : portion proche partiellement retenue, unité complète, reste inférieur à 0,5 m, preuve limitée à la partie déjà parcourue, voie parallèle concurrente, pont/autre niveau, croisement perpendiculaire, pistes séparées, pause, temps inversé et saut GPS. Le diagnostic ne modifie pas les entrées ni le résultat du matching.
+- Interface : filtres d’indice/arrondissement, portion résolue par une autre activité, aucune correction automatique ; fiche d’une unité à 96 % et d’un reste positif inférieur à 0,1 m.
+- Cas public synthétique sur le réseau complet : unité de cheminement à Bellecour 1047873522:6bdb84ba49f6 (9,56 m), couverture volontairement vide et trace exacte sur ce chemin. Un indice détecté en environ 334 ms dans cet environnement. Ce n’est ni une activité réelle ni une mesure iPhone.
+- La séance récente d’Arthur n’a pas été reçue et n’est donc pas validée. Aucune nouvelle publication Netlify.
+
+- Contrôle Chromium mobile 390×844 sur activité synthétique publique : nouvel indice, filtres, comparaison carte et métrique restante ; quatre allers-retours diagnostic/carte sans erreur JavaScript après correction des recentrages animés concurrents. Aucune mutation des activités/corrections, aucun débordement horizontal.
+- Recontrôle des parcours après ce correctif de carte : cercle, arrondissement, GPX et calcul hors connexion fonctionnels ; 39 parties de routage, aucune erreur navigateur.

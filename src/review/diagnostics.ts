@@ -1,9 +1,10 @@
-import type { Coordinate, Segment, TrackPoint } from '../types'
+import type { Coordinate, Coverage, Segment, TrackPoint } from '../types'
+import { fraction } from '../stats/progress'
 import { GPS_TOLERANCE_METERS } from '../utils/config'
 export const DIAGNOSTIC_VERSION='1'
 export const REVIEW_RADIUS_METERS=22
 export const MAX_REVIEW_SUGGESTIONS=500
-export interface Suggestion {segmentId:string;reason:'parallel'|'offset';distance:number}
+export interface Suggestion {segmentId:string;reason:'parallel'|'offset'|'unmatched';distance:number}
 export interface IgnoredReview {activityId:string;segmentId:string;version:string}
 export interface ReviewResult {suggestions:Suggestion[];truncated:boolean}
 const SX=111195.08*Math.cos(45.76*Math.PI/180), SY=111195.08
@@ -14,9 +15,10 @@ const dot=(a:Coordinate,b:Coordinate)=>a[0]*b[0]+a[1]*b[1]
 const direction=(a:Coordinate,b:Coordinate):Coordinate=>[b[0]-a[0],b[1]-a[1]]
 const parallel=(a:Coordinate,b:Coordinate)=>Math.abs(dot(a,b))/Math.max(1e-9,Math.hypot(...a)*Math.hypot(...b))>Math.cos(Math.PI/12)
 /** Conservative hints only. Never returns coverage or changes the automatic matching. */
-export function diagnose(segments:Segment[],tracks:TrackPoint[][],onProgress?:(n:number)=>void):ReviewResult {
-  const grid=new Map<string,Edge[]>()
+export function diagnose(segments:Segment[],tracks:TrackPoint[][],onProgress?:(n:number)=>void,coverage?:Coverage):ReviewResult {
+  const grid=new Map<string,Edge[]>(),incompleteIds=new Set<string>()
   for(const segment of segments){
+    if(coverage!==undefined&&(1-fraction(coverage[segment.id]))*segment.lengthMeters>=.5)incompleteIds.add(segment.id)
     const points=segment.coordinates.map(xy),lengths=points.slice(1).map((p,i)=>Math.hypot(p[0]-points[i][0],p[1]-points[i][1])),total=lengths.reduce((a,b)=>a+b,0)
     let offset=0
     for(let i=1;i<points.length;i++){
@@ -56,12 +58,24 @@ export function diagnose(segments:Segment[],tracks:TrackPoint[][],onProgress?:(n
         const next=new Map<string,{candidate:Candidate;reason:Suggestion['reason'];start:number}>()
         for(const c of cs){
           const alternative=c.distance<=cs[0].distance+3&&cs.some(other=>other.distance<=cs[0].distance+3&&other.edge.segment.osmWayId!==c.edge.segment.osmWayId&&other.distance<=GPS_TOLERANCE_METERS&&c.distance<=GPS_TOLERANCE_METERS&&Math.abs(other.distance-c.distance)<=3&&parallel(direction(other.edge.a,other.edge.b),direction(c.edge.a,c.edge.b))&&Math.abs((other.edge.a[0]-c.edge.a[0])*(c.edge.b[1]-c.edge.a[1])-(other.edge.a[1]-c.edge.a[1])*(c.edge.b[0]-c.edge.a[0]))/c.edge.length>3)
-          const reason:Suggestion['reason']|undefined=alternative?'parallel':c.distance>GPS_TOLERANCE_METERS&&!cs.some(candidate=>candidate.distance<=GPS_TOLERANCE_METERS)?'offset':undefined
+          // A hint, never automatic coverage: a small unit closely followed by this
+          // continuous trace, with no competing way of similar distance or other level.
+          const segment=c.edge.segment
+          const incomplete=incompleteIds.has(segment.id)
+          const close=incomplete&&segment.lengthMeters<=10.1&&c.distance<=8&&(!segment.layer||segment.layer==='0')&&(!segment.bridge||segment.bridge==='no')&&!segment.connector&&!cs.some(other=>other.edge.segment.osmWayId!==segment.osmWayId&&other.distance<c.distance+3)
+          const reason:Suggestion['reason']|undefined=alternative?'parallel':c.distance>GPS_TOLERANCE_METERS&&!cs.some(candidate=>candidate.distance<=GPS_TOLERANCE_METERS)?'offset':close?'unmatched':undefined
           if(!reason)continue
           const id=c.edge.segment.id,prev=previous.get(id),start=prev?.reason===reason?prev.start:c.t
           next.set(id,{candidate:c,reason,start})
           if(Math.abs(c.t-start)*c.edge.total>=Math.min(6,c.edge.total*.7)&&c.edge.total>=2){
-            if(found.size<MAX_REVIEW_SUGGESTIONS||found.has(id))found.set(id,{segmentId:id,reason,distance:c.distance})
+            // Do not suggest an uncovered endpoint if the evidence only follows
+            // the already covered part; require >=0.5m of supported missing length.
+            const low=Math.min(start,c.t),high=Math.max(start,c.t)
+            const supportedMissing=(high-low-fraction((coverage?.[id]||[]).map(([a,b])=>[Math.max(low,a),Math.min(high,b)] as [number,number]).filter(([a,b])=>b>a)))*c.edge.total
+            if(reason==='unmatched'&&supportedMissing<.5)continue
+            if(found.size<MAX_REVIEW_SUGGESTIONS||found.has(id)){
+              if(reason!=='unmatched'||!found.has(id))found.set(id,{segmentId:id,reason,distance:c.distance})
+            }
             else truncated=true
           }
         }
@@ -73,3 +87,4 @@ export function diagnose(segments:Segment[],tracks:TrackPoint[][],onProgress?:(n
   onProgress?.(100)
   return {suggestions:[...found.values()],truncated}
 }
+

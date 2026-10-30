@@ -76,3 +76,11 @@
 .relief-profile svg {display:block;width:100%;max-height:110px;color:#7023b7}
 .relief-profile small {display:block;font-size:.8rem;line-height:1.4}
 .route-panel select {max-width:100%}
+
+.review-filters {display:flex;flex-direction:row;flex-wrap:wrap;gap:12px;margin:16px 0}
+.review-filters label {display:flex;flex-direction:column;gap:8px;flex:1 1 180px;min-width:0}
+.review-filters select {font:inherit;font-size:16px;color:inherit;background:#fff;border:1px solid #839b88;border-radius:8px;padding:10px;min-height:44px;width:100%;max-width:100%}
+.review-filters select:focus-visible,.portion-coverage summary:focus-visible {outline:3px solid #de8753;outline-offset:3px}
+.portion-coverage summary {cursor:pointer;padding:12px 0;min-height:44px}
+.portion-coverage details p {margin:0 0 10px;line-height:1.6}
+[data-theme=dark] .review-filters select {background:#192c23;color:#e5eee7;border-color:#526c58}

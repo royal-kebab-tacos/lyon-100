@@ -38,3 +38,38 @@ describe('review decisions and compatible backups',()=>{
  it('rolls back ignored decisions if restoring activities fails',async()=>{const a=await add();await ignoreReview(a.id,'unit',network.version,db);const before=(await db.settings.get('reviewIgnored'))?.value;await expect(restoreBackup({activities:[a,a],corrections:[],reviewIgnored:[]},network,db)).rejects.toThrow();expect((await db.settings.get('reviewIgnored'))?.value).toEqual(before)})
  it('rejects ignores after deletion or incompatible network',async()=>{const a=await add();await expect(ignoreReview(a.id,'unit','other',db)).rejects.toThrow();await deleteActivity(a.id,db);await expect(ignoreReview(a.id,'unit',network.version,db)).rejects.toThrow()})
 })
+
+
+describe('small portions close to the trace but not retained',()=>{
+ const unit=()=>road('unit',0,30,10)
+ it('requires explicit coverage and leaves matching and input data unchanged',()=>{
+  const s=[unit()],tracks=[track(2)],coverage={}
+  expect(diagnose(s,tracks).suggestions).toEqual([])
+  const before=matchSegments(s,tracks)
+  expect(diagnose(s,tracks,undefined,coverage).suggestions).toEqual([expect.objectContaining({segmentId:'unit',reason:'unmatched'})])
+  expect(coverage).toEqual({});expect(matchSegments(s,tracks)).toEqual(before)
+ })
+ it('hides complete units and insignificant residuals, keeps meaningful partial coverage',()=>{
+  expect(diagnose([unit()],[track()],undefined,{unit:[[0,1]]}).suggestions).toEqual([])
+  expect(diagnose([unit()],[track()],undefined,{unit:[[0,.99]]}).suggestions).toEqual([])
+  expect(diagnose([unit()],[track()],undefined,{unit:[[0,.5]]}).suggestions[0]?.reason).toBe('unmatched')
+ })
+ it('does not infer an uncovered end when only the covered part was followed',()=>{
+  const short=[{coordinates:point(30,0),time:null},{coordinates:point(36,0),time:null}]
+  expect(diagnose([unit()],[short],undefined,{unit:[[0,.7]]}).suggestions).toEqual([])
+ })
+ it('does not add hints for long roads, distant paths, other levels or bridges',()=>{
+  for(const s of [road('long'),{...unit(),layer:'1'},{...unit(),bridge:'yes'}])expect(diagnose([s],[track()],undefined,{}).suggestions).toEqual([])
+  expect(diagnose([unit()],[track(10)],undefined,{}).suggestions).toEqual([])
+ })
+ it('does not mistake a parallel alternative for an unambiguous missing portion',()=>{
+  const result=diagnose([unit(),road('other',4,30,10)],[track(2)],undefined,{})
+  expect(result.suggestions.some(s=>s.reason==='unmatched')).toBe(false)
+  expect(result.suggestions.every(s=>s.reason==='parallel')).toBe(true)
+ })
+ it('does not join tracks, pauses, reversed timestamps, jumps or perpendicular crossings',()=>{
+  const a={coordinates:point(30,0),time:null},b={coordinates:point(40,0),time:null}
+  const cases:TrackPoint[][][]=[[[a],[b]],[[{...a,time:'2026-01-01T00:00:00Z'},{...b,time:'2026-01-01T00:03:00Z'}]],[[{...a,time:'2026-01-01T00:03:00Z'},{...b,time:'2026-01-01T00:00:00Z'}]],[[{coordinates:point(-100,0),time:null},{coordinates:point(300,0),time:null}]],[[{coordinates:point(35,-10),time:null},{coordinates:point(35,10),time:null}]]]
+  for(const tracks of cases)expect(diagnose([unit()],tracks,undefined,{}).suggestions).toEqual([])
+ })
+})

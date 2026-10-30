@@ -187,3 +187,17 @@ Les demandes précédentes différées restent conservées. Cette préparation n
 - Le fichier conserve la géométrie exacte et inclut un résumé textuel : distance, nouvelles portions estimées, D+/D− et proportion du relief renseignée. Aucune altitude ponctuelle ni date d’activité inventée.
 - Profil altimétrique gradué en kilomètres.
 - Travail enregistré seulement sur develop/parcours-1.9 avec [skip netlify] ; production toujours 1.9.0. Recette sur iPhone physique et application GPX destinataire encore nécessaire.
+
+## Petits restes et Bellecour — préparation 1.10.0-dev.3
+
+Arthur confirme qu’une nouvelle séance Strava a été importée correctement, mais signale encore de petits morceaux gris après avoir quadrillé Bellecour. Le GPX de cette séance n’est pas fourni : ne pas annoncer ce cas corrigé à partir d’une ancienne sauvegarde ou d’un test synthétique.
+
+- [x] Diagnostic facultatif supplémentaire : petites unités ≤10,1 m suivies de près (≤8 m), alignement longitudinal, sans autre voie aussi plausible, au niveau du sol sans pont. Il faut une portion manquante d’au moins 0,5 m appuyée par le suivi ; les traces séparées et longues pauses ne se combinent pas. Aucune modification automatique de la couverture.
+- [x] Filtres du diagnostic par type d’indice et arrondissement. Les décalages et petits restes entièrement couverts par d’autres séances sont masqués ; les ambiguïtés entre voies parallèles restent visibles. Les choix ignorés existants restent respectés.
+- [x] Recentrages programmatiques sans animation concurrente : correction d’une erreur Leaflet reproduite en ouvrant la comparaison GPS. Le zoom manuel reste disponible.
+- [x] Fiche carte : mètres parcourus et restants de la portion sélectionnée, y compris les très petits restes, avec explication sur les places et parcs représentés par des lignes.
+- [ ] Recette de la séance exacte de Bellecour, puis correctif de matching seulement si la comparaison démontre une erreur et que les tests de rues parallèles, ponts et quais restent satisfaits.
+
+Les cheminements d’une place ne sont pas assimilés automatiquement à toute sa surface. Le diagnostic ne remplace ni une preuve GPS ni une décision explicite de correction. Réseau, matching, dénominateur et format des sauvegardes inchangés. Travail sur la branche de développement avec [skip netlify], sans publication de production.
+
+Suite conservée : validation des parcours locaux/iPhone, livraison regroupée, puis Strava automatique (autorisation et stockage serveur sécurisé à préparer), FIT/ZIP et sauvegarde cloud. Ce lot ne prétend pas avoir livré ces intégrations.
